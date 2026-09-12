@@ -43,7 +43,7 @@
       top: 0;
       z-index: 100;
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-      justify-content: center;
+      justify-content: flex-start; /* 모바일에서 좌측 정렬 스크롤 가능하게 */
     }
     .main-tab-container::-webkit-scrollbar { height: 4px; }
     .main-tab-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
@@ -100,11 +100,11 @@
       border-color: var(--primary-color);
     }
 
-    /* 메인 콘텐츠 영역 */
+    /* 메인 콘텐츠 영역 (기본 모바일 대응) */
     main {
-      max-width: 850px;
-      margin: 20px auto;
-      padding: 0 16px;
+      max-width: 900px;
+      margin: 16px auto;
+      padding: 0 12px;
     }
 
     .tab-content { display: none; }
@@ -113,13 +113,13 @@
     .card {
       background: var(--card-bg);
       border-radius: 12px;
-      padding: 20px;
+      padding: 16px;
       margin-bottom: 16px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
 
     .card-title {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       color: var(--primary-color);
       margin-bottom: 12px;
       display: flex;
@@ -138,10 +138,10 @@
       display: none;
     }
     .guide-header {
-      padding: 16px 20px;
+      padding: 14px 16px;
       background: #dcfce7;
       color: #166534;
-      font-size: 1.05rem;
+      font-size: 1rem;
       font-weight: bold;
       cursor: pointer;
       display: flex;
@@ -151,7 +151,7 @@
     }
     .guide-header:hover { background: #bbf7d0; }
     .guide-content {
-      padding: 20px;
+      padding: 16px;
       font-size: 0.9rem;
       color: #14532d;
       line-height: 1.7;
@@ -166,7 +166,7 @@
     .forecast-widget {
       background: linear-gradient(135deg, #e0f2fe, #bae6fd);
       border-radius: 12px;
-      padding: 16px 20px;
+      padding: 16px;
       margin-bottom: 16px;
       color: #0369a1;
       box-shadow: 0 2px 6px rgba(0,0,0,0.05);
@@ -177,18 +177,18 @@
       align-items: center;
       margin-bottom: 6px;
     }
-    .forecast-date { font-size: 1rem; font-weight: bold; color: #075985; }
-    .forecast-city { font-size: 0.85rem; background: #ffffff; padding: 2px 8px; border-radius: 12px; font-weight: 600; }
+    .forecast-date { font-size: 0.95rem; font-weight: bold; color: #075985; }
+    .forecast-city { font-size: 0.8rem; background: #ffffff; padding: 2px 8px; border-radius: 12px; font-weight: 600; }
     .forecast-details { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; flex-wrap: wrap; gap: 6px; }
-    .forecast-temp { font-size: 1.1rem; font-weight: bold; }
-    .forecast-condition { font-size: 1.05rem; font-weight: bold; color: #0284c7; background: rgba(255, 255, 255, 0.7); padding: 2px 8px; border-radius: 6px; }
+    .forecast-temp { font-size: 1rem; font-weight: bold; }
+    .forecast-condition { font-size: 0.95rem; font-weight: bold; color: #0284c7; background: rgba(255, 255, 255, 0.7); padding: 2px 8px; border-radius: 6px; }
     
     .forecast-outfit-container {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      flex-direction: column;
+      gap: 8px;
       background: rgba(255, 255, 255, 0.6);
-      padding: 8px 12px;
+      padding: 10px 12px;
       border-radius: 6px;
       margin-top: 8px;
     }
@@ -252,7 +252,7 @@
     /* 구글 지도 스타일 */
     .map-box {
       width: 100%;
-      height: 320px;
+      height: 260px;
       border: 0;
       border-radius: 10px;
       margin-top: 8px;
@@ -265,13 +265,13 @@
       margin-top: 8px;
     }
     .schedule-table th, .schedule-table td {
-      padding: 10px 8px;
+      padding: 8px 6px;
       text-align: left;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       border-bottom: 1px solid #edf2f7;
     }
     .schedule-table th { background-color: #f8fafc; color: #475569; font-weight: 600; }
-    .schedule-table td.col-time { width: 110px; }
+    .schedule-table td.col-time { width: 85px; }
 
     /* 편집 모드 입력창 */
     .edit-input {
@@ -280,7 +280,7 @@
       border: 1px solid #cbd5e1;
       background: #ffffff;
       font-family: inherit;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       border-radius: 4px;
       margin-bottom: 4px;
     }
@@ -296,39 +296,34 @@
       background: #e0f2fe;
       color: #0284c7;
       border: none;
-      padding: 4px 8px;
+      padding: 6px 10px; /* 모바일 터치 편의성 고려 */
       border-radius: 4px;
       font-size: 0.75rem;
       cursor: pointer;
       font-weight: bold;
     }
-    .btn-edit:hover { background: #bae6fd; }
-
     .btn-save {
       background: #dcfce7;
       color: #16a34a;
       border: none;
-      padding: 4px 8px;
+      padding: 6px 10px;
       border-radius: 4px;
       font-size: 0.75rem;
       cursor: pointer;
       font-weight: bold;
     }
-    .btn-save:hover { background: #bbf7d0; }
-
     .del-row-btn, .del-item-btn {
       background: #fee2e2;
       color: #ef4444;
       border: none;
-      padding: 4px 8px;
+      padding: 6px 10px;
       border-radius: 4px;
       font-size: 0.75rem;
       cursor: pointer;
       font-weight: bold;
     }
-    .del-row-btn:hover, .del-item-btn:hover { background: #fecaca; }
 
-    /* 다중 파일 업로드 관련 스타일 */
+    /* 파일 업로드 관련 */
     .file-upload-wrapper {
       margin-top: 4px;
       display: flex;
@@ -342,13 +337,12 @@
       background: #f1f5f9;
       color: #475569;
       border: 1px solid #cbd5e1;
-      padding: 2px 6px;
+      padding: 4px 8px;
       border-radius: 4px;
       cursor: pointer;
       font-weight: bold;
       font-size: 0.75rem;
     }
-    .btn-upload-file:hover { background: #e2e8f0; }
     .file-badge-container {
       display: flex;
       flex-direction: column;
@@ -363,11 +357,11 @@
       background: #f0fdf4;
       border: 1px solid #bbf7d0;
       color: #166534;
-      padding: 2px 6px;
+      padding: 4px 8px;
       border-radius: 4px;
       font-size: 0.75rem;
       font-weight: bold;
-      max-width: 180px;
+      max-width: 100%;
     }
     .file-badge span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .file-badge-actions { display: flex; gap: 4px; }
@@ -381,80 +375,76 @@
       border-radius: 8px;
       margin-top: 12px;
       display: flex;
+      flex-direction: column; /* 모바일에서 세로 정렬로 터치 편하게 */
       gap: 8px;
-      flex-wrap: wrap;
     }
     .sched-input {
-      padding: 8px;
+      padding: 10px;
       border: 1px solid #cbd5e1;
       border-radius: 6px;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
+      width: 100%;
     }
-    .sched-input.time { width: 110px; }
-    .sched-input.place { width: 150px; }
-    .sched-input.desc { flex: 1; }
     .sched-add-btn {
       background: var(--primary-color);
       color: white;
       border: none;
-      padding: 8px 14px;
+      padding: 10px 14px;
       border-radius: 6px;
       font-weight: bold;
       cursor: pointer;
+      width: 100%;
     }
 
-    /* 클릭 가능한 장소 링크 및 길찾기 버튼 */
+    /* 장소 링크 및 길찾기 */
     .place-link {
       color: #0284c7;
       font-weight: bold;
       text-decoration: underline;
       cursor: pointer;
     }
-    .place-link:hover { color: #0369a1; }
-    
     .dir-btn {
       display: inline-flex;
       align-items: center;
       gap: 3px;
       background: #e0f2fe;
       color: #0284c7;
-      padding: 2px 6px;
+      padding: 4px 8px;
       border-radius: 4px;
       font-size: 0.75rem;
       font-weight: bold;
       text-decoration: none;
-      margin-left: 6px;
+      margin-top: 4px;
       border: 1px solid #bae6fd;
     }
-    .dir-btn:hover { background: #bae6fd; }
 
-    /* 공통 폼 박스 스타일 */
+    /* 공통 폼 박스 */
     .add-form-box {
       background: #f8fafc;
       border: 1px solid #e2e8f0;
-      padding: 12px 16px;
+      padding: 12px;
       border-radius: 8px;
       margin-bottom: 16px;
       display: flex;
+      flex-direction: column;
       gap: 8px;
-      flex-wrap: wrap;
     }
     .add-input {
-      flex: 1;
-      padding: 8px 12px;
+      width: 100%;
+      padding: 10px 12px;
       border: 1px solid #cbd5e1;
       border-radius: 6px;
       font-size: 0.9rem;
-      min-width: 120px;
     }
     .add-btn {
       background: var(--primary-color);
       color: white;
       border: none;
-      padding: 8px 16px;
+      padding: 10px 16px;
       border-radius: 6px;
       font-weight: bold;
       cursor: pointer;
+      width: 100%;
     }
 
     .shop-region-group {
@@ -480,20 +470,20 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 8px 12px;
+      padding: 10px 12px;
       background: #ffffff;
       border: 1px solid #edf2f7;
       border-radius: 6px;
       margin-bottom: 6px;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
     }
     .checklist-item.checked span {
       text-decoration: line-through;
       color: #94a3b8;
     }
-    .check-left { display: flex; align-items: center; gap: 10px; }
+    .check-left { display: flex; align-items: center; gap: 10px; flex: 1; word-break: break-all; }
 
-    /* 여행일기 전용 모바일 최적화 스타일 */
+    /* 여행일기 스타일 */
     .diary-form-card {
       background: #ffffff;
       border: 1px solid #cbd5e1;
@@ -502,9 +492,7 @@
       margin-bottom: 20px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.04);
     }
-    .diary-form-row {
-      margin-bottom: 10px;
-    }
+    .diary-form-row { margin-bottom: 10px; }
     .diary-form-row label {
       display: block;
       font-size: 0.85rem;
@@ -566,20 +554,68 @@
       margin-bottom: 12px;
       padding-bottom: 4px;
     }
-    .diary-photos-grid::-webkit-scrollbar { height: 4px; }
-    .diary-photos-grid::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
-    
     .diary-photo-thumb {
-      width: 80px;
-      height: 80px;
+      width: 75px;
+      height: 75px;
       object-fit: cover;
       border-radius: 8px;
       border: 1px solid #cbd5e1;
       cursor: pointer;
       flex: 0 0 auto;
-      transition: transform 0.1s;
     }
-    .diary-photo-thumb:hover { transform: scale(1.03); }
+
+    /* ==========================================================
+       [핵심] PC 화면 전용 스타일 (화면 너비가 768px보다 클 때 적용)
+       ========================================================== */
+    @media (min-width: 768px) {
+      main {
+        max-width: 950px;
+        margin: 30px auto;
+        padding: 0 24px;
+      }
+      header {
+        padding: 32px 24px;
+      }
+      header h1 { font-size: 2rem; }
+      
+      .card {
+        padding: 28px;
+        margin-bottom: 24px;
+      }
+      .card-title { font-size: 1.35rem; }
+
+      /* PC에서는 입력 폼들을 가로로 나열하여 넓게 사용 */
+      .add-sched-box {
+        flex-direction: row;
+        align-items: center;
+      }
+      .sched-input.time { width: 120px; }
+      .sched-input.place { width: 180px; }
+      .sched-input.desc { flex: 1; }
+      .sched-add-btn { width: auto; }
+
+      .add-form-box {
+        flex-direction: row;
+        align-items: center;
+      }
+      .add-btn { width: auto; }
+
+      .forecast-outfit-container {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .map-box {
+        height: 380px;
+      }
+
+      .schedule-table th, .schedule-table td {
+        padding: 12px 10px;
+        font-size: 0.95rem;
+      }
+      .schedule-table td.col-time { width: 120px; }
+    }
   </style>
 </head>
 <body>
@@ -628,12 +664,14 @@
             <button id="summary-save-btn" class="btn-save" style="display:none;" onclick="saveSummaryEdit()">저장</button>
           </div>
         </div>
-        <table class="schedule-table">
-          <thead>
-            <tr><th>Day</th><th>일자</th><th>도시/이동</th><th>주요 일정 요약</th></tr>
-          </thead>
-          <tbody id="summaryTableBody"></tbody>
-        </table>
+        <div style="overflow-x: auto;">
+          <table class="schedule-table">
+            <thead>
+              <tr><th>Day</th><th>일자</th><th>도시/이동</th><th>주요 일정 요약</th></tr>
+            </thead>
+            <tbody id="summaryTableBody"></tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -655,12 +693,14 @@
 
       <div class="card">
         <h2 class="card-title" id="schedule-card-title">Day 일정표</h2>
-        <table class="schedule-table">
-          <thead>
-            <tr><th style="width:110px;">시간</th><th>장소 및 내용</th><th style="width:90px;">관리</th></tr>
-          </thead>
-          <tbody id="scheduleTableBody"></tbody>
-        </table>
+        <div style="overflow-x: auto;">
+          <table class="schedule-table">
+            <thead>
+              <tr><th style="width:100px;">시간</th><th>장소 및 내용</th><th style="width:85px;">관리</th></tr>
+            </thead>
+            <tbody id="scheduleTableBody"></tbody>
+          </table>
+        </div>
         
         <div class="add-sched-box">
           <input type="text" id="newSchedTime" class="sched-input time" placeholder="시간 (예: 14:00)">
@@ -784,10 +824,12 @@
           <input type="text" id="newTransInfo" class="add-input" placeholder="예약 번호 / 금액">
           <button class="add-btn" onclick="addTransportItem()">항목 추가</button>
         </div>
-        <table class="schedule-table">
-          <thead><tr><th>구간</th><th>항공사 / 예약처</th><th>예약 번호 / 금액</th><th>다중 티켓 파일</th><th>관리</th></tr></thead>
-          <tbody id="transportTableBody"></tbody>
-        </table>
+        <div style="overflow-x: auto;">
+          <table class="schedule-table">
+            <thead><tr><th>구간</th><th>항공사 / 예약처</th><th>예약 번호 / 금액</th><th>다중 티켓 파일</th><th>관리</th></tr></thead>
+            <tbody id="transportTableBody"></tbody>
+          </table>
+        </div>
       </div>
 
       <!-- 주요 관광지 예약 정보 -->
@@ -805,10 +847,12 @@
           <input type="text" id="newAttrablePrice" class="add-input" placeholder="금액">
           <button class="add-btn" onclick="addAttractionItem()">항목 추가</button>
         </div>
-        <table class="schedule-table">
-          <thead><tr><th>관광지</th><th>예약 상세 & 인원 정보</th><th>금액</th><th>다중 예약증 파일</th><th>관리</th></tr></thead>
-          <tbody id="attractionTableBody"></tbody>
-        </table>
+        <div style="overflow-x: auto;">
+          <table class="schedule-table">
+            <thead><tr><th>관광지</th><th>예약 상세 & 인원 정보</th><th>금액</th><th>다중 예약증 파일</th><th>관리</th></tr></thead>
+            <tbody id="attractionTableBody"></tbody>
+          </table>
+        </div>
       </div>
 
       <!-- 🏨 숙소 정보 -->
@@ -822,12 +866,14 @@
           <input type="text" id="newHotelLink" class="add-input" placeholder="에어비앤비 링크 URL">
           <button class="add-btn" onclick="addHotelItem()">숙소 추가</button>
         </div>
-        <table class="schedule-table">
-          <thead>
-            <tr><th>숙소분류</th><th>여행지</th><th>체크인/아웃</th><th>구글 주소</th><th>예약 링크</th><th>관리</th></tr>
-          </thead>
-          <tbody id="hotelTableBody"></tbody>
-        </table>
+        <div style="overflow-x: auto;">
+          <table class="schedule-table">
+            <thead>
+              <tr><th>숙소분류</th><th>여행지</th><th>체크인/아웃</th><th>구글 주소</th><th>예약 링크</th><th>관리</th></tr>
+            </thead>
+            <tbody id="hotelTableBody"></tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -836,9 +882,9 @@
       <div class="card">
         <h2 class="card-title">🍽️ 지역별 맛집 리스트</h2>
         <div class="add-form-box">
-          <input type="text" id="newRestRegion" class="add-input" placeholder="지역 (예: 바르셀로나)" style="width: 130px; flex: 0 0 auto;">
+          <input type="text" id="newRestRegion" class="add-input" placeholder="지역 (예: 바르셀로나)">
           <input type="text" id="newRestName" class="add-input" placeholder="가게명 (예: Vinitus)">
-          <input type="text" id="newRestMenu" class="add-input" placeholder="대표메뉴 (예: 꿀대구, 샹그리아)">
+          <input type="text" id="newRestMenu" class="add-input" placeholder="대표메뉴 (예: 꿀대구)">
           <button class="add-btn" onclick="addRestaurantItem()">맛집 추가</button>
         </div>
         <div id="restaurantContainer"></div>
@@ -850,8 +896,8 @@
       <div class="card">
         <h2 class="card-title">🛒 지역별 추천 쇼핑템 & 먹거리 리스트</h2>
         <div class="add-form-box">
-          <input type="text" id="newShopRegion" class="add-input" placeholder="지역 입력 (예: 헬싱키)" style="width: 120px; flex: 0 0 auto;">
-          <input type="text" id="newShopItem" class="add-input" placeholder="추천 쇼핑템 입력 (예: 마트 기념품)">
+          <input type="text" id="newShopRegion" class="add-input" placeholder="지역 입력 (예: 헬싱키)">
+          <input type="text" id="newShopItem" class="add-input" placeholder="추천 쇼핑템 입력">
           <button class="add-btn" onclick="addShoppingItem()">쇼핑템 추가</button>
         </div>
         <div id="shoppingContainer"></div>
@@ -863,7 +909,7 @@
       <div class="card">
         <h2 class="card-title">🎒 준비물</h2>
         <div class="add-form-box">
-          <input type="text" id="newCheckItem" class="add-input" placeholder="새로운 준비물 입력 (예: 멀티댑터, 상비약)">
+          <input type="text" id="newCheckItem" class="add-input" placeholder="새로운 준비물 입력">
           <button class="add-btn" onclick="addChecklistItem()">추가</button>
         </div>
         <div id="checklistContainer"></div>
@@ -934,7 +980,7 @@
       { day: 'Day 5', date: '10/5 (월)', city: '바르셀로나', desc: '09:15 몬세라트 수도원 투어 (소년합창단, 검은성모상)' },
       { day: 'Day 6', date: '10/6 (화)', city: '바르셀로나 → 니스', desc: '10:30 구엘공원 · 시우타데야 공원 → 20:50 니스 비행기 이동' },
       { day: 'Day 7', date: '10/7 (수)', city: '니스', desc: '캐슬힐, 살레아 마켓 · 해변 수영 / 마티스-샤갈 미술관' },
-      { day: 'Day 8', date: '10/8 (목)', city: '니스 근교', desc: '09:00 에즈 선인장마을 · 팔로마비치 · 빌프랑슈 쉬르메르' },
+      { day: 'Day 8', date: '10/8 (목)', city: '니스 근교', desc: '09:00 에즈 선인장마일 · 팔로마비치 · 빌프랑슈 쉬르메르' },
       { day: 'Day 9', date: '10/9 (금)', city: '니스 근교 (렌트)', desc: '10:00 베르동 협곡 전동보트 · 무스티에 생트마리 · 샤토 와이너리' },
       { day: 'Day 10', date: '10/10 (토)', city: '니스 근교 (렌트)', desc: '[자유] 망통–이탈리아(산레모) or 고흐드-루시용 샘의마을 코스' },
       { day: 'Day 11', date: '10/11 (일)', city: '니스 → 바르셀로나', desc: '생폴드방스 구경 후 17:25 바르셀로나 이동' },
@@ -1131,7 +1177,7 @@
       renderSummaryTable();
     }
 
-    /* 여행일기 탭 관리 (작성자, 사진업로드, 일기작성, 수정/삭제) */
+    /* 여행일기 탭 관리 */
     function renderDiaryList() {
       const container = document.getElementById('diaryFeedContainer');
       let diaries = JSON.parse(localStorage.getItem('travel_diaries') || JSON.stringify(defaultDiary));
@@ -1140,7 +1186,6 @@
         container.innerHTML = `<div style="text-align:center; color:#94a3b8; padding:20px;">작성된 여행일기가 없습니다. 첫 일기를 남겨보세요!</div>`;
         return;
       }
-      // 최신순 정렬
       diaries.sort((a, b) => b.id - a.id);
 
       diaries.forEach((item) => {
@@ -1281,18 +1326,18 @@
               <div class="checklist-item">
                 <div class="check-left" style="flex:1;">
                   <div id="rest-view-${item.id}">
-                    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name)}" target="_blank" class="place-link" style="font-size:1rem; font-weight:bold;">${item.name}</a>
-                    <span style="color:#64748b; margin-left:8px; font-size:0.9rem;">(대표메뉴: ${item.menu})</span>
+                    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name)}" target="_blank" class="place-link" style="font-size:0.95rem; font-weight:bold;">${item.name}</a>
+                    <span style="color:#64748b; margin-left:6px; font-size:0.85rem;">(대표메뉴: ${item.menu})</span>
                   </div>
                   <div id="rest-edit-form-${item.id}" style="display:none; width:100%;">
                     <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
-                      <input type="text" id="rest-reg-input-${item.id}" class="edit-input" value="${item.region}" style="width:110px; margin-bottom:0;" placeholder="지역">
-                      <input type="text" id="rest-name-input-${item.id}" class="edit-input" value="${item.name}" style="flex:1; min-width:120px; margin-bottom:0;" placeholder="가게명">
-                      <input type="text" id="rest-menu-input-${item.id}" class="edit-input" value="${item.menu}" style="flex:1; min-width:140px; margin-bottom:0;" placeholder="대표메뉴">
+                      <input type="text" id="rest-reg-input-${item.id}" class="edit-input" value="${item.region}" style="width:90px; margin-bottom:0;" placeholder="지역">
+                      <input type="text" id="rest-name-input-${item.id}" class="edit-input" value="${item.name}" style="flex:1; min-width:110px; margin-bottom:0;" placeholder="가게명">
+                      <input type="text" id="rest-menu-input-${item.id}" class="edit-input" value="${item.menu}" style="flex:1; min-width:120px; margin-bottom:0;" placeholder="대표메뉴">
                     </div>
                   </div>
                 </div>
-                <div class="action-btn-group" style="margin-left:10px;">
+                <div class="action-btn-group" style="margin-left:6px;">
                   <button id="rest-edit-btn-${item.id}" class="btn-edit" onclick="toggleRestaurantEdit(${item.id})">수정</button>
                   <button id="rest-save-btn-${item.id}" class="btn-save" style="display:none;" onclick="saveRestaurantEdit(${item.id})">저장</button>
                   <button class="del-item-btn" onclick="deleteRestaurant(${item.id})">삭제</button>
@@ -1350,7 +1395,7 @@
       }
     }
 
-    /* 항공권 & 렌터카 예약 정보 관리 */
+    /* 항공권 & 렌터카 관리 */
     function renderTransportTable() {
       const list = JSON.parse(localStorage.getItem('travel_transport') || JSON.stringify(defaultTransport));
       const tbody = document.getElementById('transportTableBody');
@@ -1490,7 +1535,7 @@
       }
     }
 
-    /* 주요 관광지 예약 정보 관리 */
+    /* 관광지 예약 관리 */
     function renderAttractionTable() {
       const list = JSON.parse(localStorage.getItem('travel_attractions') || JSON.stringify(defaultAttractions));
       const tbody = document.getElementById('attractionTableBody');
@@ -1731,7 +1776,6 @@
       }
     }
 
-    /* 공통 파일 미리보기 팝업 함수 */
     function viewFile(dataUrl, fileType, fileName) {
       let win = window.open();
       win.document.write(`<title>${fileName}</title>`);
@@ -1811,7 +1855,6 @@
       let dayData = allSchedules[dayId];
 
       document.getElementById('schedule-card-title').innerText = dayData.title;
-      
       loadForecast('active-weather-widget', dayData.cityName, dayData.dateStr, dayData.max, dayData.min, dayData.outfit);
       
       const memoView = document.getElementById('memo-view');
@@ -1849,7 +1892,7 @@
             <input type="text" id="time-input-${index}" class="edit-input" value="${row.time}" style="display:none;">
           </td>
           <td>
-            <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
+            <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px; flex-wrap:wrap;">
               <span id="place-text-${index}" class="place-link" onclick="updateMap('active-map-box', '${row.place}', '${row.place}')">${row.place}</span>
               <input type="text" id="place-input-${index}" class="edit-input" value="${row.place}" style="display:none; margin-bottom:0;">
               <a href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(row.place)}" target="_blank" class="dir-btn">🚗 길찾기</a>
@@ -1999,7 +2042,7 @@
         </div>
         <div class="forecast-details">
           <div>
-            <span style="font-size:0.85rem; color:#475569;">예상 기온: </span>
+            <span style="font-size:0.8rem; color:#475569;">예상 기온: </span>
             <span class="forecast-temp">최고 ${maxT}°C / 최저 ${minT}°C</span>
           </div>
           <div class="forecast-condition">
@@ -2009,7 +2052,7 @@
         <div class="forecast-outfit-container">
           <div id="outfit-view" class="forecast-outfit">💡 <b>추천 옷차림 & 팁:</b> ${outfit}</div>
           <textarea id="outfit-textarea" class="outfit-textarea" rows="2">${outfit}</textarea>
-          <div class="action-btn-group" style="margin-left: 8px;">
+          <div class="action-btn-group" style="justify-content: flex-end;">
             <button id="outfit-edit-btn" class="btn-edit" onclick="toggleOutfitEdit()">수정</button>
             <button id="outfit-save-btn" class="btn-save" style="display:none;" onclick="saveOutfitEdit()">저장</button>
           </div>
