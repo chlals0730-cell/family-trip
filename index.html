@@ -26,6 +26,8 @@
       color: var(--text-color);
       line-height: 1.6;
       padding-bottom: 40px;
+      word-break: keep-all;
+      overflow-wrap: break-word;
     }
 
     header {
@@ -307,7 +309,7 @@
     .del-row-btn, .del-item-btn { background: #fee2e2; color: #ef4444; border: 1px solid #fecaca; }
     .del-row-btn:hover, .del-item-btn:hover { background: #fecaca; }
 
-    /* 파일 업로드 관련 */
+    /* 파일 업로드 관련 (클립 아이콘 버튼) */
     .file-upload-wrapper {
       margin-top: 4px;
       display: flex;
@@ -318,15 +320,22 @@
     }
     .file-upload-input { display: none; }
     .btn-upload-file {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
       background: #f1f5f9;
       color: #475569;
       border: 1px solid #cbd5e1;
-      padding: 4px 8px;
-      border-radius: 4px;
+      padding: 0;
+      border-radius: 6px;
       cursor: pointer;
-      font-weight: bold;
-      font-size: 0.75rem;
+      font-size: 0.85rem;
+      transition: all 0.2s;
     }
+    .btn-upload-file:hover { background: #e2e8f0; }
+
     .file-badge-container {
       display: flex;
       flex-direction: column;
@@ -1231,7 +1240,7 @@
       }
     }
 
-    /* 항공권 & 렌터카 */
+    /* 항공권 & 렌터카 (클립 아이콘 버튼 적용) */
     function renderTransportTable() {
       const tbody = document.getElementById('transportTableBody');
       tbody.innerHTML = '';
@@ -1276,7 +1285,7 @@
             ${filesHtml}
             <div class="file-upload-wrapper">
               <input type="file" id="trans-file-input-${index}" class="file-upload-input" accept="image/*,application/pdf" onchange="uploadTransportFile(event, ${index})">
-              <button class="btn-upload-file" onclick="document.getElementById('trans-file-input-${index}').click()">+ 파일 추가</button>
+              <button class="btn-upload-file" title="파일 첨부" onclick="document.getElementById('trans-file-input-${index}').click()">📎</button>
             </div>
           </td>
           <td>
@@ -1365,7 +1374,7 @@
       }
     }
 
-    /* 관광지 예약 관리 */
+    /* 관광지 예약 관리 (클립 아이콘 버튼 적용) */
     function renderAttractionTable() {
       const tbody = document.getElementById('attractionTableBody');
       tbody.innerHTML = '';
@@ -1410,7 +1419,7 @@
             ${filesHtml}
             <div class="file-upload-wrapper">
               <input type="file" id="attr-file-input-${index}" class="file-upload-input" accept="image/*,application/pdf" onchange="uploadAttractionFile(event, ${index})">
-              <button class="btn-upload-file" onclick="document.getElementById('attr-file-input-${index}').click()">+ 파일 추가</button>
+              <button class="btn-upload-file" title="파일 첨부" onclick="document.getElementById('attr-file-input-${index}').click()">📎</button>
             </div>
           </td>
           <td>
@@ -1499,7 +1508,7 @@
       }
     }
 
-    /* 숙소 관리 */
+    /* 숙소 관리 (예약링크 '🔗' 아이콘만 표시) */
     function renderHotelTable() {
       const tbody = document.getElementById('hotelTableBody');
       tbody.innerHTML = '';
@@ -1529,9 +1538,9 @@
             </span>
             <input type="text" id="hotel-addr-input-${index}" class="edit-input" value="${hotel.address}" style="display:none; margin-bottom:0;">
           </td>
-          <td>
+          <td style="text-align: center;">
             <span id="hotel-link-${index}">
-              ${hotel.link ? `<a href="${hotel.link}" target="_blank" class="place-link">🔗 바로가기</a>` : '링크없음'}
+              ${hotel.link ? `<a href="${hotel.link}" target="_blank" class="place-link" title="예약 페이지 열기" style="font-size:1.1rem; text-decoration:none;">🔗</a>` : '-'}
             </span>
             <input type="text" id="hotel-link-input-${index}" class="edit-input" value="${hotel.link || ''}" placeholder="URL" style="display:none; margin-bottom:0;">
           </td>
@@ -1598,7 +1607,7 @@
       }
     }
 
-    /* 맛집 관리 (대표메뉴 텍스트 표시 방식 변경) */
+    /* 맛집 관리 */
     function renderRestaurantList() {
       const container = document.getElementById('restaurantContainer');
       container.innerHTML = '';
