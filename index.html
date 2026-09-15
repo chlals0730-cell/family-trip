@@ -20,15 +20,21 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    /* 한글 단어 단위 줄바꿈 핵심 설정 */
+    body, th, td, span, div, p, a {
+      word-break: keep-all !important; /* 글자 단위 쪼개짐 절대 방지 */
+      overflow-wrap: normal !important; /* 강제 분리 방지 */
+      line-break: strict;
+      -webkit-line-break: strict;
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       background-color: var(--bg-color);
       color: var(--text-color);
       line-height: 1.6;
       padding-bottom: 40px;
-      /* 한국어 어절 단위 줄바꿈 및 자연스러운 줄바꿈 보장 */
-      word-break: keep-all;
-      overflow-wrap: break-word;
     }
 
     header {
@@ -252,7 +258,7 @@
       margin-top: 8px;
     }
 
-    /* 일정 테이블 컬럼 비율 고정 & 패딩/폰트 미세 조정 */
+    /* 테이블 스타일 (컬럼 비율 및 단어 보존) */
     .schedule-table {
       width: 100%;
       border-collapse: collapse;
@@ -268,6 +274,13 @@
     }
     .schedule-table th { background-color: #f8fafc; color: #475569; font-weight: 600; }
     
+    /* 쪼개짐 방지 클래스 */
+    .word-wrap {
+      display: inline-block;
+      word-break: keep-all;
+      white-space: normal;
+    }
+
     /* 쪼개지면 안 되는 고정 컬럼 */
     .schedule-table td.col-time {
       width: 82px;
@@ -297,7 +310,7 @@
       box-shadow: 0 0 0 2px rgba(43, 88, 118, 0.1);
     }
 
-    /* 버튼 스타일 (콤팩트 아이콘형) */
+    /* 버튼 스타일 */
     .action-btn-group { display: flex; gap: 4px; flex-wrap: nowrap; align-items: center; justify-content: flex-end; }
     .btn-edit, .btn-save, .del-row-btn, .del-item-btn {
       display: inline-flex;
@@ -316,32 +329,16 @@
       flex-shrink: 0;
     }
 
-    /* 파란색 세모(▲) 수정 버튼 */
-    .btn-edit {
-      background: #e0f2fe;
-      color: #0284c7;
-      border: 1px solid #bae6fd;
-    }
+    .btn-edit { background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; }
     .btn-edit:hover { background: #bae6fd; }
 
-    /* 초록색 체크(✓) 저장 버튼 */
-    .btn-save {
-      background: #dcfce7;
-      color: #16a34a;
-      border: 1px solid #bbf7d0;
-      font-size: 0.85rem;
-    }
+    .btn-save { background: #dcfce7; color: #16a34a; border: 1px solid #bbf7d0; font-size: 0.85rem; }
     .btn-save:hover { background: #bbf7d0; }
 
-    /* 빨간색 엑스(✕) 삭제 버튼 */
-    .del-row-btn, .del-item-btn {
-      background: #fee2e2;
-      color: #ef4444;
-      border: 1px solid #fecaca;
-    }
+    .del-row-btn, .del-item-btn { background: #fee2e2; color: #ef4444; border: 1px solid #fecaca; }
     .del-row-btn:hover, .del-item-btn:hover { background: #fecaca; }
 
-    /* 파일 업로드 관련 */
+    /* 파일 업로드 */
     .file-upload-wrapper {
       margin-top: 4px;
       display: flex;
@@ -415,12 +412,13 @@
       width: 100%;
     }
 
-    /* 장소 링크 및 길찾기 (단어 쪼개짐 방지) */
+    /* 장소 링크 및 길찾기 */
     .place-link {
       color: #0284c7;
       font-weight: bold;
       text-decoration: underline;
       cursor: pointer;
+      display: inline-block;
       word-break: keep-all;
     }
     .dir-btn {
@@ -505,7 +503,7 @@
       text-decoration: line-through;
       color: #94a3b8;
     }
-    .check-left { display: flex; align-items: center; gap: 8px; flex: 1; word-break: keep-all; }
+    .check-left { display: flex; align-items: center; gap: 8px; flex: 1; }
 
     /* 여행일기 및 댓글 스타일 */
     .diary-form-card {
@@ -572,7 +570,6 @@
       white-space: pre-line;
       line-height: 1.6;
       margin-bottom: 12px;
-      word-break: keep-all;
     }
     .diary-photos-grid {
       display: flex;
@@ -625,7 +622,6 @@
     }
     .comment-text {
       color: #334155;
-      word-break: keep-all;
       margin-top: 2px;
     }
     .comment-form {
@@ -661,16 +657,16 @@
       white-space: nowrap;
     }
 
-    /* 반응형 미세 조정 (모바일) */
+    /* 반응형 (모바일 480px 이하) */
     @media (max-width: 480px) {
       .schedule-table th, .schedule-table td {
-        padding: 6px 4px;
+        padding: 6px 3px;
         font-size: 0.78rem;
       }
-      .card { padding: 12px; }
-      .card-title { font-size: 1rem; }
-      .col-time { width: 75px !important; }
-      .col-manage { width: 62px !important; }
+      .card { padding: 12px 8px; }
+      .card-title { font-size: 0.95rem; }
+      .col-time { width: 70px !important; font-size: 0.75rem !important; }
+      .col-manage { width: 58px !important; }
     }
 
     /* 반응형 (PC) */
@@ -733,7 +729,7 @@
   </nav>
 
   <main>
-    <!-- 전체 요약 탭 (비율 고정) -->
+    <!-- 전체 요약 탭 -->
     <div id="summary" class="tab-content active">
       <div class="card">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
@@ -749,8 +745,8 @@
               <tr>
                 <th style="width: 14%; white-space: nowrap;">Day</th>
                 <th style="width: 22%; white-space: nowrap;">일자</th>
-                <th style="width: 26%; word-break: keep-all;">도시/이동</th>
-                <th style="width: 38%; word-break: keep-all;">주요 일정 요약</th>
+                <th style="width: 26%;">도시/이동</th>
+                <th style="width: 38%;">주요 일정 요약</th>
               </tr>
             </thead>
             <tbody id="summaryTableBody"></tbody>
@@ -782,7 +778,7 @@
             <thead>
               <tr>
                 <th class="col-time">시간</th>
-                <th style="word-break: keep-all;">장소 및 내용</th>
+                <th>장소 및 내용</th>
                 <th class="col-manage">관리</th>
               </tr>
             </thead>
@@ -827,7 +823,7 @@
       </div>
     </div>
 
-    <!-- 티켓 및 예약보관함 탭 (비율 고정) -->
+    <!-- 티켓 및 예약보관함 탭 -->
     <div id="tickets" class="tab-content">
       <div class="card">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
@@ -847,10 +843,10 @@
           <table class="schedule-table">
             <thead>
               <tr>
-                <th style="width: 25%; word-break: keep-all;">구간</th>
-                <th style="width: 22%; word-break: keep-all;">항공사/예약처</th>
-                <th style="width: 25%; word-break: keep-all;">예약번호/금액</th>
-                <th style="width: 16%; word-break: keep-all;">티켓파일</th>
+                <th style="width: 25%;">구간</th>
+                <th style="width: 22%;">항공사/예약처</th>
+                <th style="width: 25%;">예약번호/금액</th>
+                <th style="width: 16%;">티켓파일</th>
                 <th class="col-manage">관리</th>
               </tr>
             </thead>
@@ -877,10 +873,10 @@
           <table class="schedule-table">
             <thead>
               <tr>
-                <th style="width: 24%; word-break: keep-all;">관광지</th>
-                <th style="width: 32%; word-break: keep-all;">상세 & 인원 정보</th>
-                <th style="width: 16%; word-break: keep-all;">금액</th>
-                <th style="width: 16%; word-break: keep-all;">예약증</th>
+                <th style="width: 24%;">관광지</th>
+                <th style="width: 32%;">상세 & 인원 정보</th>
+                <th style="width: 16%;">금액</th>
+                <th style="width: 16%;">예약증</th>
                 <th class="col-manage">관리</th>
               </tr>
             </thead>
@@ -903,11 +899,11 @@
           <table class="schedule-table">
             <thead>
               <tr>
-                <th style="width: 14%; word-break: keep-all;">분류</th>
-                <th style="width: 16%; word-break: keep-all;">도시</th>
-                <th style="width: 18%; word-break: keep-all;">체크인/아웃</th>
-                <th style="width: 26%; word-break: keep-all;">구글 주소</th>
-                <th style="width: 14%; word-break: keep-all;">링크</th>
+                <th style="width: 14%;">분류</th>
+                <th style="width: 16%;">도시</th>
+                <th style="width: 18%;">체크인/아웃</th>
+                <th style="width: 26%;">구글 주소</th>
+                <th style="width: 14%;">링크</th>
                 <th class="col-manage">관리</th>
               </tr>
             </thead>
@@ -1002,7 +998,6 @@
   </main>
 
   <script>
-    // 사용자 전용 Firebase 설정
     const firebaseConfig = {
       apiKey: "AIzaSyCeUR_6Xo2_s9ahZY1V_wcyVE505i66Tr4",
       authDomain: "family-trip-d0d76.firebaseapp.com",
@@ -1016,7 +1011,6 @@
     let db = null;
     let isCloudConnected = false;
 
-    // 기본 데이터셋
     const defaultData = {
       summary: [
         { day: 'Day 1', date: '10/1 (목)', city: '인천 → 헬싱키', desc: '21:50 출국 (인천공항T1, 13시간 40분 비행)' },
@@ -1161,11 +1155,11 @@
             <input type="text" id="sum-date-input-${index}" class="edit-input" value="${item.date}" style="display:none; margin-bottom:0;">
           </td>
           <td>
-            <span id="sum-city-${index}">${item.city}</span>
+            <span id="sum-city-${index}" class="word-wrap">${item.city}</span>
             <input type="text" id="sum-city-input-${index}" class="edit-input" value="${item.city}" style="display:none; margin-bottom:0;">
           </td>
           <td>
-            <span id="sum-desc-${index}">${item.desc}</span>
+            <span id="sum-desc-${index}" class="word-wrap">${item.desc}</span>
             <input type="text" id="sum-desc-input-${index}" class="edit-input" value="${item.desc}" style="display:none; margin-bottom:0;">
           </td>
         `;
@@ -1246,7 +1240,7 @@
               <input type="text" id="place-input-${index}" class="edit-input" value="${row.place}" style="display:none; margin-bottom:0;">
               <a href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(row.place)}" target="_blank" class="dir-btn" title="길찾기">🚗</a>
             </div>
-            <span id="desc-text-${index}" style="display:block; font-size:0.85rem; color:#475569; word-break:keep-all;">${row.desc}</span>
+            <span id="desc-text-${index}" class="word-wrap" style="display:block; font-size:0.85rem; color:#475569;">${row.desc}</span>
             <textarea id="desc-input-${index}" class="edit-input" style="display:none; resize:vertical;" rows="2">${row.desc}</textarea>
           </td>
           <td class="col-manage">
@@ -1350,15 +1344,15 @@
 
         tr.innerHTML = `
           <td>
-            <span id="trans-route-${index}"><b>${item.route}</b></span>
+            <span id="trans-route-${index}" class="word-wrap"><b>${item.route}</b></span>
             <input type="text" id="trans-route-input-${index}" class="edit-input" value="${item.route}" style="display:none; margin-bottom:0;">
           </td>
           <td>
-            <span id="trans-agency-${index}">${item.agency}</span>
+            <span id="trans-agency-${index}" class="word-wrap">${item.agency}</span>
             <input type="text" id="trans-agency-input-${index}" class="edit-input" value="${item.agency}" style="display:none; margin-bottom:0;">
           </td>
           <td>
-            <span id="trans-info-${index}">${item.info}</span>
+            <span id="trans-info-${index}" class="word-wrap">${item.info}</span>
             <input type="text" id="trans-info-input-${index}" class="edit-input" value="${item.info}" style="display:none; margin-bottom:0;">
           </td>
           <td>
@@ -1484,15 +1478,15 @@
 
         tr.innerHTML = `
           <td>
-            <span id="attr-name-${index}"><b>${item.name}</b></span>
+            <span id="attr-name-${index}" class="word-wrap"><b>${item.name}</b></span>
             <input type="text" id="attr-name-input-${index}" class="edit-input" value="${item.name}" style="display:none; margin-bottom:0;">
           </td>
           <td>
-            <span id="attr-detail-${index}">${item.detail}</span>
+            <span id="attr-detail-${index}" class="word-wrap">${item.detail}</span>
             <input type="text" id="attr-detail-input-${index}" class="edit-input" value="${item.detail}" style="display:none; margin-bottom:0;">
           </td>
           <td>
-            <span id="attr-price-${index}">${item.price}</span>
+            <span id="attr-price-${index}" class="word-wrap">${item.price}</span>
             <input type="text" id="attr-price-input-${index}" class="edit-input" value="${item.price}" style="display:none; margin-bottom:0;">
           </td>
           <td>
@@ -1601,15 +1595,15 @@
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>
-            <span id="hotel-cat-${index}">${hotel.category}</span>
+            <span id="hotel-cat-${index}" class="word-wrap">${hotel.category}</span>
             <input type="text" id="hotel-cat-input-${index}" class="edit-input" value="${hotel.category}" style="display:none; margin-bottom:0;">
           </td>
           <td>
-            <span id="hotel-city-${index}">${hotel.city}</span>
+            <span id="hotel-city-${index}" class="word-wrap">${hotel.city}</span>
             <input type="text" id="hotel-city-input-${index}" class="edit-input" value="${hotel.city}" style="display:none; margin-bottom:0;">
           </td>
           <td>
-            <span id="hotel-time-${index}">${hotel.time}</span>
+            <span id="hotel-time-${index}" class="word-wrap">${hotel.time}</span>
             <input type="text" id="hotel-time-input-${index}" class="edit-input" value="${hotel.time}" style="display:none; margin-bottom:0;">
           </td>
           <td>
@@ -1709,7 +1703,7 @@
                 <div class="check-left" style="flex:1;">
                   <div id="rest-view-${item.id}">
                     <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name)}" target="_blank" class="place-link" style="font-size:0.95rem; font-weight:bold;">${item.name}</a>
-                    <span style="color:#64748b; margin-left:6px; font-size:0.85rem; word-break:keep-all;">(대표메뉴: ${item.menu})</span>
+                    <span class="word-wrap" style="color:#64748b; margin-left:6px; font-size:0.85rem;">(대표메뉴: ${item.menu})</span>
                   </div>
                   <div id="rest-edit-form-${item.id}" style="display:none; width:100%;">
                     <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
@@ -1791,7 +1785,7 @@
             html += `
               <div class="checklist-item">
                 <div class="check-left">
-                  <span>🛍️ ${item.text}</span>
+                  <span class="word-wrap">🛍️ ${item.text}</span>
                 </div>
                 <button class="del-item-btn" title="삭제" onclick="deleteShopping(${item.id})">✕</button>
               </div>
@@ -1835,7 +1829,7 @@
         div.innerHTML = `
           <div class="check-left">
             <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="toggleCheck(${item.id})">
-            <span>${item.text}</span>
+            <span class="word-wrap">${item.text}</span>
           </div>
           <button class="del-item-btn" title="삭제" onclick="deleteChecklist(${item.id})">✕</button>
         `;
@@ -1893,7 +1887,7 @@
             <div class="comment-item">
               <div>
                 <span class="comment-author">${c.author}:</span>
-                <span class="comment-text">${c.text}</span>
+                <span class="comment-text word-wrap">${c.text}</span>
               </div>
               <button class="del-item-btn" style="width:20px; height:20px; font-size:0.7rem;" title="댓글 삭제" onclick="deleteComment(${item.id}, ${c.id})">✕</button>
             </div>
@@ -1905,7 +1899,7 @@
         div.innerHTML = `
           <div class="diary-item-header">
             <div>
-              <span class="diary-author">✏️ ${item.author}</span>
+              <span class="diary-author">${item.author}</span>
               <span class="diary-date-badge" style="margin-left:8px;">${item.day}</span>
             </div>
             <div class="action-btn-group">
@@ -1914,7 +1908,7 @@
             </div>
           </div>
           <div id="diary-view-${item.id}">
-            <div class="diary-body-text">${item.content}</div>
+            <div class="diary-body-text word-wrap">${item.content}</div>
             ${photosHtml}
           </div>
           <div id="diary-edit-form-${item.id}" style="display:none; margin-top:10px;">
