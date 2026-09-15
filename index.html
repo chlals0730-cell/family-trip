@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>가족 여행 일정표 (바르셀로나 & 니스)</title>
+  
+  <!-- Firebase 실시간 데이터베이스 SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
   <style>
     :root {
       --primary-color: #2b5876;
@@ -32,6 +37,16 @@
     }
     header h1 { font-size: 1.6rem; margin-bottom: 6px; }
     header p { font-size: 0.9rem; opacity: 0.9; }
+
+    /* 연결 상태 안내 바 */
+    #sync-status-bar {
+      background: #e2e8f0;
+      color: #475569;
+      font-size: 0.8rem;
+      text-align: center;
+      padding: 4px;
+      font-weight: bold;
+    }
 
     /* 메인 탭 메뉴 */
     .main-tab-container {
@@ -75,9 +90,7 @@
       padding: 8px 12px;
       gap: 6px;
     }
-    .sub-tab-container.active {
-      display: flex;
-    }
+    .sub-tab-container.active { display: flex; }
     .sub-tab-container::-webkit-scrollbar { height: 4px; }
     .sub-tab-container::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 2px; }
 
@@ -182,29 +195,6 @@
     .forecast-details { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; flex-wrap: wrap; gap: 6px; }
     .forecast-temp { font-size: 1rem; font-weight: bold; }
     .forecast-condition { font-size: 0.95rem; font-weight: bold; color: #0284c7; background: rgba(255, 255, 255, 0.7); padding: 2px 8px; border-radius: 6px; }
-    
-    .forecast-outfit-container {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      background: rgba(255, 255, 255, 0.6);
-      padding: 10px 12px;
-      border-radius: 6px;
-      margin-top: 8px;
-    }
-    .forecast-outfit { font-size: 0.85rem; color: #1e293b; flex: 1; }
-    .outfit-textarea {
-      width: 100%;
-      padding: 6px 8px;
-      border: 1px solid #7dd3fc;
-      border-radius: 4px;
-      font-family: inherit;
-      font-size: 0.85rem;
-      background: #ffffff;
-      color: #1e293b;
-      resize: vertical;
-      display: none;
-    }
 
     /* 일일 메모 박스 스타일 */
     .memo-box {
@@ -290,38 +280,48 @@
       box-shadow: 0 0 0 2px rgba(43, 88, 118, 0.1);
     }
 
-    /* 버튼 스타일 */
+    /* 버튼 스타일 (콤팩트 아이콘형) */
     .action-btn-group { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+    .btn-edit, .btn-save, .del-row-btn, .del-item-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      padding: 0;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      cursor: pointer;
+      line-height: 1;
+      transition: all 0.2s;
+    }
+
+    /* 파란색 세모(▲) 수정 버튼 */
     .btn-edit {
       background: #e0f2fe;
       color: #0284c7;
-      border: none;
-      padding: 6px 10px;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      cursor: pointer;
-      font-weight: bold;
+      border: 1px solid #bae6fd;
     }
+    .btn-edit:hover { background: #bae6fd; }
+
+    /* 초록색 체크(✓) 저장 버튼 */
     .btn-save {
       background: #dcfce7;
       color: #16a34a;
-      border: none;
-      padding: 6px 10px;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      cursor: pointer;
-      font-weight: bold;
+      border: 1px solid #bbf7d0;
+      font-size: 0.85rem;
     }
+    .btn-save:hover { background: #bbf7d0; }
+
+    /* 빨간색 엑스(✕) 삭제 버튼 */
     .del-row-btn, .del-item-btn {
       background: #fee2e2;
       color: #ef4444;
-      border: none;
-      padding: 6px 10px;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      cursor: pointer;
-      font-weight: bold;
+      border: 1px solid #fecaca;
     }
+    .del-row-btn:hover, .del-item-btn:hover { background: #fecaca; }
 
     /* 파일 업로드 관련 */
     .file-upload-wrapper {
@@ -396,7 +396,7 @@
       width: 100%;
     }
 
-    /* 장소 링크 및 길찾기 */
+    /* 장소 링크 및 길찾기 (콤팩트 아이콘형) */
     .place-link {
       color: #0284c7;
       font-weight: bold;
@@ -406,17 +406,19 @@
     .dir-btn {
       display: inline-flex;
       align-items: center;
-      gap: 3px;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
       background: #e0f2fe;
       color: #0284c7;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      font-weight: bold;
+      padding: 0;
+      border-radius: 6px;
+      font-size: 0.85rem;
       text-decoration: none;
-      margin-top: 4px;
       border: 1px solid #bae6fd;
+      transition: all 0.2s;
     }
+    .dir-btn:hover { background: #bae6fd; }
 
     /* 공통 폼 박스 */
     .add-form-box {
@@ -632,7 +634,6 @@
       align-self: flex-end;
     }
 
-    /* PC 전용 스타일 반응형 */
     @media (min-width: 768px) {
       main {
         max-width: 950px;
@@ -659,6 +660,9 @@
     <h1>✈️ FAMILY TRIP (12박 13일)</h1>
     <p>헬싱키 · 바르셀로나 · 니스</p>
   </header>
+
+  <!-- 실시간 연동 상태 표시 -->
+  <div id="sync-status-bar">⚡ 실시간 동기화 상태: 확인 중...</div>
 
   <!-- 메인 탭 메뉴 -->
   <nav class="main-tab-container" id="mainTabMenu">
@@ -695,8 +699,8 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
           <h2 class="card-title" style="margin-bottom:0;">📌 전체 일정 한눈에 보기 (2026년 10월)</h2>
           <div class="action-btn-group">
-            <button id="summary-edit-btn" class="btn-edit" onclick="toggleSummaryEdit()">수정</button>
-            <button id="summary-save-btn" class="btn-save" style="display:none;" onclick="saveSummaryEdit()">저장</button>
+            <button id="summary-edit-btn" class="btn-edit" title="수정" onclick="toggleSummaryEdit()">▲</button>
+            <button id="summary-save-btn" class="btn-save" title="저장" style="display:none;" onclick="saveSummaryEdit()">✓</button>
           </div>
         </div>
         <div style="overflow-x: auto;">
@@ -718,8 +722,8 @@
         <div class="memo-header">
           <span class="memo-title">📝 메모</span>
           <div class="action-btn-group">
-            <button id="memo-edit-btn" class="btn-edit" onclick="toggleMemoEdit()">수정</button>
-            <button id="memo-save-btn" class="btn-save" style="display:none;" onclick="saveMemoEdit()">저장</button>
+            <button id="memo-edit-btn" class="btn-edit" title="수정" onclick="toggleMemoEdit()">▲</button>
+            <button id="memo-save-btn" class="btn-save" title="저장" style="display:none;" onclick="saveMemoEdit()">✓</button>
           </div>
         </div>
         <div id="memo-view" class="memo-content-view"></div>
@@ -731,7 +735,7 @@
         <div style="overflow-x: auto;">
           <table class="schedule-table">
             <thead>
-              <tr><th style="width:100px;">시간</th><th>장소 및 내용</th><th style="width:85px;">관리</th></tr>
+              <tr><th style="width:100px;">시간</th><th>장소 및 내용</th><th style="width:70px;">관리</th></tr>
             </thead>
             <tbody id="scheduleTableBody"></tbody>
           </table>
@@ -780,8 +784,8 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
           <h2 class="card-title" style="margin-bottom:0;">✈️ 항공권 & 렌터카 예약 정보</h2>
           <div class="action-btn-group">
-            <button id="transport-edit-btn" class="btn-edit" onclick="toggleTransportEdit()">수정</button>
-            <button id="transport-save-btn" class="btn-save" style="display:none;" onclick="saveTransportEdit()">저장</button>
+            <button id="transport-edit-btn" class="btn-edit" title="수정" onclick="toggleTransportEdit()">▲</button>
+            <button id="transport-save-btn" class="btn-save" title="저장" style="display:none;" onclick="saveTransportEdit()">✓</button>
           </div>
         </div>
         <div class="add-form-box" style="margin-bottom: 12px;">
@@ -792,7 +796,7 @@
         </div>
         <div style="overflow-x: auto;">
           <table class="schedule-table">
-            <thead><tr><th>구간</th><th>항공사 / 예약처</th><th>예약 번호 / 금액</th><th>다중 티켓 파일</th><th>관리</th></tr></thead>
+            <thead><tr><th>구간</th><th>항공사 / 예약처</th><th>예약 번호 / 금액</th><th>다중 티켓 파일</th><th style="width:70px;">관리</th></tr></thead>
             <tbody id="transportTableBody"></tbody>
           </table>
         </div>
@@ -802,8 +806,8 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
           <h2 class="card-title" style="margin-bottom:0;">📝 주요 관광지 예약 정보</h2>
           <div class="action-btn-group">
-            <button id="attraction-edit-btn" class="btn-edit" onclick="toggleAttractionEdit()">수정</button>
-            <button id="attraction-save-btn" class="btn-save" style="display:none;" onclick="saveAttractionEdit()">저장</button>
+            <button id="attraction-edit-btn" class="btn-edit" title="수정" onclick="toggleAttractionEdit()">▲</button>
+            <button id="attraction-save-btn" class="btn-save" title="저장" style="display:none;" onclick="saveAttractionEdit()">✓</button>
           </div>
         </div>
         <div class="add-form-box" style="margin-bottom: 12px;">
@@ -814,7 +818,7 @@
         </div>
         <div style="overflow-x: auto;">
           <table class="schedule-table">
-            <thead><tr><th>관광지</th><th>예약 상세 & 인원 정보</th><th>금액</th><th>다중 예약증 파일</th><th>관리</th></tr></thead>
+            <thead><tr><th>관광지</th><th>예약 상세 & 인원 정보</th><th>금액</th><th>다중 예약증 파일</th><th style="width:70px;">관리</th></tr></thead>
             <tbody id="attractionTableBody"></tbody>
           </table>
         </div>
@@ -833,7 +837,7 @@
         <div style="overflow-x: auto;">
           <table class="schedule-table">
             <thead>
-              <tr><th>숙소분류</th><th>여행지</th><th>체크인/아웃</th><th>구글 주소</th><th>예약 링크</th><th>관리</th></tr>
+              <tr><th>숙소분류</th><th>여행지</th><th>체크인/아웃</th><th>구글 주소</th><th>예약 링크</th><th style="width:70px;">관리</th></tr>
             </thead>
             <tbody id="hotelTableBody"></tbody>
           </table>
@@ -880,13 +884,12 @@
       </div>
     </div>
 
-    <!-- 여행일기 탭 (댓글 기능 포함) -->
+    <!-- 여행일기 탭 -->
     <div id="diary" class="tab-content">
       <div class="card">
         <h2 class="card-title">📖 오늘의 여행일기</h2>
         <p style="font-size:0.85rem; color:#64748b; margin-bottom:16px;">가족들과 함께 오늘 하루 가장 기억에 남는 순간과 소감을 나눠보세요!</p>
         
-        <!-- 일기 작성 폼 카드 -->
         <div class="diary-form-card">
           <div class="diary-form-row">
             <label>작성자 이름</label>
@@ -921,13 +924,105 @@
           <button class="add-btn" style="width:100%; margin-top:8px;" onclick="addDiaryItem()">일기 등록하기</button>
         </div>
 
-        <!-- 작성된 일기 피드 리스트 (댓글 포함) -->
         <div id="diaryFeedContainer"></div>
       </div>
     </div>
   </main>
 
   <script>
+    // ==========================================
+    // [중요] 여기에 Firebase 콘솔에서 복사한 설정을 붙여넣으세요!
+    // ==========================================
+    const firebaseConfig = {
+      apiKey: "여기에_API_KEY를_입력하세요",
+      authDomain: "여기에_PROJECT_ID.firebaseapp.com",
+      databaseURL: "여기에_DATABASE_URL을_입력하세요",
+      projectId: "여기에_PROJECT_ID",
+      storageBucket: "여기에_PROJECT_ID.appspot.com",
+      messagingSenderId: "여기에_SENDER_ID",
+      appId: "여기에_APP_ID"
+    };
+
+    let db = null;
+    let isCloudConnected = false;
+
+    // 기본 초기 데이터셋
+    const defaultData = {
+      summary: [
+        { day: 'Day 1', date: '10/1 (목)', city: '인천 → 헬싱키', desc: '21:50 출국 (인천공항T1, 13시간 40분 비행)' },
+        { day: 'Day 2', date: '10/2 (금)', city: '헬싱키 → 바르셀로나', desc: '05:30 헬싱키 레이오버 (알라스풀, 시내구경) → 17:05 바르셀로나 이동' },
+        { day: 'Day 3', date: '10/3 (토)', city: '바르셀로나', desc: '라람블라 & 고딕지구 쇼핑 · 17:15 까사바트요 · Vinitus 저녁' },
+        { day: 'Day 4', date: '10/4 (일)', city: '바르셀로나', desc: '10:00 구엘저택 · 13:30 피카소 미술관 · 16:15 사그라다 파밀리아' },
+        { day: 'Day 5', date: '10/5 (월)', city: '바르셀로나', desc: '09:15 몬세라트 수도원 투어 (소년합창단, 검은성모상)' },
+        { day: 'Day 6', date: '10/6 (화)', city: '바르셀로나 → 니스', desc: '10:30 구엘공원 · 시우타데야 공원 → 20:50 니스 비행기 이동' },
+        { day: 'Day 7', date: '10/7 (수)', city: '니스', desc: '캐슬힐, 살레아 마켓 · 해변 수영 / 마티스-샤갈 미술관' },
+        { day: 'Day 8', date: '10/8 (목)', city: '니스 근교', desc: '09:00 에즈 선인장마일 · 팔로마비치 · 빌프랑슈 쉬르메르' },
+        { day: 'Day 9', date: '10/9 (금)', city: '니스 근교 (렌트)', desc: '10:00 베르동 협곡 전동보트 · 무스티에 생트마리 · 샤토 와이너리' },
+        { day: 'Day 10', date: '10/10 (토)', city: '니스 근교 (렌트)', desc: '[자유] 망통–이탈리아(산레모) or 고흐드-루시용 샘의마을 코스' },
+        { day: 'Day 11', date: '10/11 (일)', city: '니스 → 바르셀로나', desc: '생폴드방스 구경 후 17:25 바르셀로나 이동' },
+        { day: 'Day 12', date: '10/12 (월)', city: '바르셀로나 → 헬싱키', desc: '10:05 바르셀로나 출발 → 헬싱키 2시간 20분 경유 후 한국행' },
+        { day: 'Day 13', date: '10/13 (화)', city: '인천 도착', desc: '11:20 인천공항 T1 도착 및 귀국' }
+      ],
+      transport: [
+        { id: 1, route: '인천 ↔ 스페인/핀란드', agency: '핀에어 (투어비스)', info: '<b>8MJLO7</b> (5,184,000원)', files: [] },
+        { id: 2, route: '바르셀로나 → 니스', agency: '부엘링 (MY TRIP & GO TO GATE)', info: 'MY TRIP: 1124-369-999', files: [] },
+        { id: 3, route: '니스 → 바르셀로나', agency: '부엘링 (MY TRIP & GO TO GATE)', info: 'MY TRIP: 1122-265-892', files: [] },
+        { id: 4, route: '니스 렌터카 (3박 4일)', agency: 'Alamo (알라모)', info: '<b>74119403</b> (392유로)', files: [] }
+      ],
+      attractions: [
+        { id: 1, name: '까사바트요', detail: '예약번호 104905530', price: '81유로', files: [] },
+        { id: 2, name: '사그라다 파밀리아', detail: '입장권 민영 구글 메일', price: '78유로', files: [] },
+        { id: 3, name: '구엘공원', detail: '네이버 메일 예약', price: '67.5유로', files: [] },
+        { id: 4, name: '구엘저택 / 피카소', detail: '10/1 사전 예약 필수', price: '무료', files: [] },
+        { id: 5, name: '몬세라트 수도원', detail: '산츠역 출발 열차', price: '약 38만원', files: [] },
+        { id: 6, name: '베르동협곡 보트', detail: 'pedaloscheznounet.fr 사전예약', price: '현장결제', files: [] }
+      ],
+      hotels: [
+        { id: 1, category: '에어비앤비', city: '바르셀로나', time: '15:00 / 11:00', address: 'Barcelona Center', link: 'https://www.airbnb.co.kr' },
+        { id: 2, category: '호텔', city: '니스', time: '16:00 / 10:00', address: 'Nice Sea View', link: 'https://www.airbnb.co.kr' }
+      ],
+      restaurants: [
+        { id: 1, region: '바르셀로나', name: 'Vinitus', menu: '꿀대구, 샹그리아, 소고기타이스' },
+        { id: 2, region: '바르셀로나', name: 'Cervecería Catalana', menu: '타파스, 맛조개 구이' },
+        { id: 3, region: '니스', name: 'Le Safari', menu: '니스풍 토마토 홍합요리, 스테이크' },
+        { id: 4, region: '헬싱키', name: 'Old Market Hall', menu: '연어스프 (Salmon Soup)' }
+      ],
+      shopping: [
+        { id: 1, region: '헬싱키', text: 'Elovena 오트밀: Vadelma(라즈베리), Mustikka(블루베리) 맛 추천' },
+        { id: 2, region: '헬싱키', text: 'Mynthon 민트캔디: 코가 뻥 뚫리는 시원함' },
+        { id: 3, region: '헬싱키', text: 'Suffeli puffi / Dumle: 핀란드 국민 초콜릿' }
+      ],
+      checklist: [
+        { id: 1, text: '슬리퍼, 샴푸/린스, 수영복, 버릴 수건', checked: false },
+        { id: 2, text: '니스 짐 맡기기용 서브 가방', checked: false },
+        { id: 3, text: '보냉가방, 음료, 돗자리', checked: false },
+        { id: 4, text: '셀카봉, 삼각대, 블루투스 스피커', checked: false },
+        { id: 5, text: '핫팩, 바람막이, 가벼운 패딩/후리스', checked: false }
+      ],
+      diaries: [
+        { id: 1, author: '준혁', day: 'Day 1 (10/1)', content: '드디어 가족 여행 출발! 비행기가 길어서 조금 피곤하지만 설렌다.', photos: [], comments: [{ id: 101, author: '엄마', text: '조심히 잘 다녀오자 아들~' }] }
+      ],
+      schedules: {
+        'day1': { title: 'Day 1 (10/1 목) - 출국', cityName: 'Helsinki', dateStr: '2026-10-01', max: 9, min: 3, memo: '인천공항 3시간 전 도착 필수.', mapQuery: 'Incheon International Airport Terminal 1', mapName: '인천공항 T1', rows: [{ time: '21:50 - 05:30', place: '인천T1 → 헬싱키', desc: '핀에어 항공편 출국' }] },
+        'day2': { title: 'Day 2 (10/2 금) - 헬싱키 레이오버 & 바르셀로나 이동', cityName: 'Helsinki', dateStr: '2026-10-02', max: 10, min: 4, memo: '알라스풀 수영복, 슬리퍼 지참.', mapQuery: 'Allas Sea Pool, Helsinki', mapName: '알라스풀', rows: [{ time: '05:30', place: '헬싱키 공항', desc: '시내 이동' }, { time: '07:30 - 10:30', place: '알라스풀', desc: '사우나 및 수영' }, { time: '17:05 - 20:05', place: '헬싱키 → 바르셀로나', desc: '비행기 이동' }] },
+        'day3': { title: 'Day 3 (10/3 토) - 바르셀로나 (라람블라 & 고딕지구)', cityName: 'Barcelona', dateStr: '2026-10-03', max: 24, min: 15, memo: '까사바트요 17:15 도착', mapQuery: 'La Rambla, Barcelona', mapName: '라람블라 거리', rows: [{ time: '10:00 - 11:00', place: '라람블라 거리', desc: '거리 구경' }, { time: '12:00 - 14:00', place: '고딕지구', desc: '고딕지구 투어' }, { time: '17:15 - 19:00', place: '까사바트요', desc: '관람' }] },
+        'day4': { title: 'Day 4 (10/4 일) - 바르셀로나 (가우디 & 피카소)', cityName: 'Barcelona', dateStr: '2026-10-04', max: 23, min: 14, memo: '예약증 준비', mapQuery: 'Palau Guell', mapName: '구엘저택', rows: [{ time: '10:00 - 12:00', place: '구엘저택', desc: '관람' }, { time: '13:30 - 15:30', place: '피카소 미술관', desc: '관람' }, { time: '16:15 - 18:00', place: '사그라다 파밀리아', desc: '성당 관람' }] },
+        'day5': { title: 'Day 5 (10/5 월) - 몬세라트 수도원 투어', cityName: 'Montserrat', dateStr: '2026-10-05', max: 22, min: 13, memo: '현금 지참', mapQuery: 'Santa Maria de Montserrat Abbey', mapName: '몬세라트 수도원', rows: [{ time: '09:15', place: '산츠역', desc: '몬세라트행 열차' }] },
+        'day6': { title: 'Day 6 (10/6 화) - 바르셀로나 → 니스 이동', cityName: 'Barcelona', dateStr: '2026-10-06', max: 23, min: 14, memo: '체크아웃', mapQuery: 'Park Guell, Barcelona', mapName: '구엘공원', rows: [{ time: '20:50 - 22:10', place: '니스 공항', desc: '비행기 이동' }] },
+        'day7': { title: 'Day 7 (10/7 수) - 니스 시내 & 구시가지', cityName: 'Nice', dateStr: '2026-10-07', max: 21, min: 13, memo: '해변 돗자리 지참', mapQuery: 'Castle Hill of Nice', mapName: '캐슬힐 전망대', rows: [{ time: '10:00', place: '캐슬힐 전망대', desc: '전망 감상' }] },
+        'day8': { title: 'Day 8 (10/8 목) - 에즈 & 팔로마 비치', cityName: 'Nice', dateStr: '2026-10-08', max: 20, min: 12, memo: '에즈 골목길 가파름', mapQuery: 'Jardin Exotique de Èze', mapName: '에즈 마을', rows: [{ time: '09:00', place: '에즈 마을', desc: '선인장 마을 탐방' }] },
+        'day9': { title: 'Day 9 (10/9 금) - 베르동 협곡 & 무스티에 생트마리', cityName: 'Verdon', dateStr: '2026-10-09', max: 19, min: 11, memo: '차량 내 짐 보관 금지', mapQuery: 'Pont du Galatas, Verdon', mapName: '베르동 협곡', rows: [{ time: '10:00', place: '베르동 협곡', desc: '전동보트 탑승' }] },
+        'day10': { title: 'Day 10 (10/10 토) - 남프랑스 근교 자유 일정', cityName: 'Nice', dateStr: '2026-10-10', max: 20, min: 12, memo: '망통 또는 산레모 코스', mapQuery: 'Menton, France', mapName: '망통', rows: [{ time: '종일', place: '망통 & 산레모', desc: '근교 드라이브' }] },
+        'day11': { title: 'Day 11 (10/11 일) - 생폴드방스 → 바르셀로나', cityName: 'Nice', dateStr: '2026-10-11', max: 21, min: 13, memo: '렌터카 반납', mapQuery: 'Saint-Paul-de-Vence', mapName: '생폴드방스', rows: [{ time: '17:25', place: '니스 공항', desc: '바르셀로나행 비행기' }] },
+        'day12': { title: 'Day 12 (10/12 월) - 바르셀로나 → 헬싱키', cityName: 'Barcelona', dateStr: '2026-10-12', max: 22, min: 14, memo: '경유지 면세점 확인', mapQuery: 'Josep Tarradellas Barcelona-El Prat Airport', mapName: '바르셀로나 공항', rows: [{ time: '10:05', place: '바르셀로나 공항', desc: '한국행 출발' }] },
+        'day13': { title: 'Day 13 (10/13 화) - 인천공항 도착', cityName: 'Helsinki', dateStr: '2026-10-13', max: 15, min: 8, memo: '수하물 확인', mapQuery: 'Incheon International Airport Terminal 1', mapName: '인천공항 T1', rows: [{ time: '11:20', place: 'Incheon International Airport Terminal 1', desc: '도착 및 일정 종료' }] }
+      }
+    };
+
+    let appData = { ...defaultData };
+    let currentActiveDayId = 'day1';
+
+    // 도시 좌표
     const cityCoords = {
       'Helsinki': { lat: 60.1699, lon: 24.9384, name: '헬싱키' },
       'Barcelona': { lat: 41.3887, lon: 2.1589, name: '바르셀로나' },
@@ -936,165 +1031,79 @@
       'Verdon': { lat: 43.7360, lon: 6.3583, name: '베르동 협곡 (Verdon)' }
     };
 
-    const defaultSummary = [
-      { day: 'Day 1', date: '10/1 (목)', city: '인천 → 헬싱키', desc: '21:50 출국 (인천공항T1, 13시간 40분 비행)' },
-      { day: 'Day 2', date: '10/2 (금)', city: '헬싱키 → 바르셀로나', desc: '05:30 헬싱키 레이오버 (알라스풀, 시내구경) → 17:05 바르셀로나 이동' },
-      { day: 'Day 3', date: '10/3 (토)', city: '바르셀로나', desc: '라람블라 & 고딕지구 쇼핑 · 17:15 까사바트요 · Vinitus 저녁' },
-      { day: 'Day 4', date: '10/4 (일)', city: '바르셀로나', desc: '10:00 구엘저택 · 13:30 피카소 미술관 · 16:15 사그라다 파밀리아' },
-      { day: 'Day 5', date: '10/5 (월)', city: '바르셀로나', desc: '09:15 몬세라트 수도원 투어 (소년합창단, 검은성모상)' },
-      { day: 'Day 6', date: '10/6 (화)', city: '바르셀로나 → 니스', desc: '10:30 구엘공원 · 시우타데야 공원 → 20:50 니스 비행기 이동' },
-      { day: 'Day 7', date: '10/7 (수)', city: '니스', desc: '캐슬힐, 살레아 마켓 · 해변 수영 / 마티스-샤갈 미술관' },
-      { day: 'Day 8', date: '10/8 (목)', city: '니스 근교', desc: '09:00 에즈 선인장마일 · 팔로마비치 · 빌프랑슈 쉬르메르' },
-      { day: 'Day 9', date: '10/9 (금)', city: '니스 근교 (렌트)', desc: '10:00 베르동 협곡 전동보트 · 무스티에 생트마리 · 샤토 와이너리' },
-      { day: 'Day 10', date: '10/10 (토)', city: '니스 근교 (렌트)', desc: '[자유] 망통–이탈리아(산레모) or 고흐드-루시용 샘의마을 코스' },
-      { day: 'Day 11', date: '10/11 (일)', city: '니스 → 바르셀로나', desc: '생폴드방스 구경 후 17:25 바르셀로나 이동' },
-      { day: 'Day 12', date: '10/12 (월)', city: '바르셀로나 → 헬싱키', desc: '10:05 바르셀로나 출발 → 헬싱키 2시간 20분 경유 후 한국행' },
-      { day: 'Day 13', date: '10/13 (화)', city: '인천 도착', desc: '11:20 인천공항 T1 도착 및 귀국' }
-    ];
-
-    const defaultTransport = [
-      { id: 1, route: '인천 ↔ 스페인/핀란드', agency: '핀에어 (투어비스)', info: '<b>8MJLO7</b> (5,184,000원)', files: [] },
-      { id: 2, route: '바르셀로나 → 니스', agency: '부엘링 (MY TRIP & GO TO GATE)', info: 'MY TRIP: 1124-369-999', files: [] },
-      { id: 3, route: '니스 → 바르셀로나', agency: '부엘링 (MY TRIP & GO TO GATE)', info: 'MY TRIP: 1122-265-892', files: [] },
-      { id: 4, route: '니스 렌터카 (3박 4일)', agency: 'Alamo (알라모)', info: '<b>74119403</b> (392유로)', files: [] }
-    ];
-
-    const defaultAttractions = [
-      { id: 1, name: '까사바트요', detail: '예약번호 104905530', price: '81유로', files: [] },
-      { id: 2, name: '사그라다 파밀리아', detail: '입장권 민영 구글 메일', price: '78유로', files: [] },
-      { id: 3, name: '구엘공원', detail: '네이버 메일 예약', price: '67.5유로', files: [] },
-      { id: 4, name: '구엘저택 / 피카소', detail: '10/1 사전 예약 필수', price: '무료', files: [] },
-      { id: 5, name: '몬세라트 수도원', detail: '산츠역 출발 열차', price: '약 38만원', files: [] },
-      { id: 6, name: '베르동협곡 보트', detail: 'pedaloscheznounet.fr 사전예약', price: '현장결제', files: [] }
-    ];
-
-    const defaultHotels = [
-      { id: 1, category: '에어비앤비', city: '바르셀로나', time: '15:00 / 11:00', address: 'Barcelona Center', link: 'https://www.airbnb.co.kr' },
-      { id: 2, category: '호텔', city: '니스', time: '16:00 / 10:00', address: 'Nice Sea View', link: 'https://www.airbnb.co.kr' }
-    ];
-
-    const defaultRestaurants = [
-      { id: 1, region: '바르셀로나', name: 'Vinitus', menu: '꿀대구, 샹그리아, 소고기타이스' },
-      { id: 2, region: '바르셀로나', name: 'Cervecería Catalana', menu: '타파스, 맛조개 구이' },
-      { id: 3, region: '니스', name: 'Le Safari', menu: '니스풍 토마토 홍합요리, 스테이크' },
-      { id: 4, region: '헬싱키', name: 'Old Market Hall', menu: '연어스프 (Salmon Soup)' }
-    ];
-
-    // 댓글(comments) 필드가 추가된 기본 일기 데이터
-    const defaultDiary = [
-      { id: 1, author: '준혁', day: 'Day 1 (10/1)', content: '드디어 13박 13일 가족 여행 출발! 비행기가 길어서 조금 피곤하지만 설렌다.', photos: [], comments: [{ id: 101, author: '엄마', text: '조심히 잘 다녀오자 아들~' }] }
-    ];
-
-    const defaultSchedules = {
-      'day1': {
-        title: 'Day 1 (10/1 목) - 출국',
-        cityName: 'Helsinki', dateStr: '2026-10-01', max: 9, min: 3, outfit: '비행하기 편한 옷',
-        memo: '인천공항 3시간 전 도착 필수.', mapQuery: 'Incheon International Airport Terminal 1', mapName: '인천공항 T1',
-        rows: [{ time: '21:50 - 05:30', place: '인천T1 → 헬싱키', desc: '핀에어 항공편 출국' }]
-      },
-      'day2': {
-        title: 'Day 2 (10/2 금) - 헬싱키 레이오버 & 바르셀로나 이동',
-        cityName: 'Helsinki', dateStr: '2026-10-02', max: 10, min: 4, outfit: '경량패딩+니트+핫팩 필수',
-        memo: '알라스풀 수영복, 슬리퍼 지참.', mapQuery: 'Allas Sea Pool, Helsinki', mapName: '알라스풀',
-        rows: [
-          { time: '05:30', place: '헬싱키 공항', desc: '시내 이동' },
-          { time: '07:30 - 10:30', place: '알라스풀', desc: '사우나 및 수영' },
-          { time: '17:05 - 20:05', place: '헬싱키 → 바르셀로나', desc: '비행기 이동' }
-        ]
-      },
-      'day3': {
-        title: 'Day 3 (10/3 토) - 바르셀로나 (라람블라 & 고딕지구)',
-        cityName: 'Barcelona', dateStr: '2026-10-03', max: 24, min: 15, outfit: '가을 가디건 지참',
-        memo: '까사바트요 17:15 도착', mapQuery: 'La Rambla, Barcelona', mapName: '라람블라 거리',
-        rows: [
-          { time: '10:00 - 11:00', place: '라람블라 거리', desc: '거리 구경' },
-          { time: '12:00 - 14:00', place: '고딕지구', desc: '고딕지구 투어' },
-          { time: '17:15 - 19:00', place: '까사바트요', desc: '관람' }
-        ]
-      },
-      'day4': {
-        title: 'Day 4 (10/4 일) - 바르셀로나 (가우디 & 피카소)',
-        cityName: 'Barcelona', dateStr: '2026-10-04', max: 23, min: 14, outfit: '가벼운 겉옷',
-        memo: '예약증 준비', mapQuery: 'Palau Guell', mapName: '구엘저택',
-        rows: [
-          { time: '10:00 - 12:00', place: '구엘저택', desc: '관람' },
-          { time: '13:30 - 15:30', place: '피카소 미술관', desc: '관람' },
-          { time: '16:15 - 18:00', place: '사그라다 파밀리아', desc: '성당 관람' }
-        ]
-      },
-      'day5': {
-        title: 'Day 5 (10/5 월) - 몬세라트 수도원 투어',
-        cityName: 'Montserrat', dateStr: '2026-10-05', max: 22, min: 13, outfit: '산악지대 바람막이 필수',
-        memo: '현금 지참', mapQuery: 'Santa Maria de Montserrat Abbey', mapName: '몬세라트 수도원',
-        rows: [{ time: '09:15', place: '산츠역', desc: '몬세라트행 열차' }]
-      },
-      'day6': {
-        title: 'Day 6 (10/6 화) - 바르셀로나 → 니스 이동',
-        cityName: 'Barcelona', dateStr: '2026-10-06', max: 23, min: 14, outfit: '산책 복장',
-        memo: '체크아웃', mapQuery: 'Park Guell, Barcelona', mapName: '구엘공원',
-        rows: [{ time: '20:50 - 22:10', place: '니스 공항', desc: '비행기 이동' }]
-      },
-      'day7': {
-        title: 'Day 7 (10/7 수) - 니스 시내 & 구시가지',
-        cityName: 'Nice', dateStr: '2026-10-07', max: 21, min: 13, outfit: '수영복/해변 복장',
-        memo: '해변 돗자리 지참', mapQuery: 'Castle Hill of Nice', mapName: '캐슬힐 전망대',
-        rows: [{ time: '10:00', place: '캐슬힐 전망대', desc: '전망 감상' }]
-      },
-      'day8': {
-        title: 'Day 8 (10/8 목) - 에즈 & 팔로마 비치',
-        cityName: 'Nice', dateStr: '2026-10-08', max: 20, min: 12, outfit: '운동화 필수',
-        memo: '에즈 골목길 가파름', mapQuery: 'Jardin Exotique de Èze', mapName: '에즈 마을',
-        rows: [{ time: '09:00', place: '에즈 마을', desc: '선인장 마을 탐방' }]
-      },
-      'day9': {
-        title: 'Day 9 (10/9 금) - 베르동 협곡 & 무스티에 생트마리',
-        cityName: 'Verdon', dateStr: '2026-10-09', max: 19, min: 11, outfit: '바람막이',
-        memo: '차량 내 짐 보관 금지', mapQuery: 'Pont du Galatas, Verdon', mapName: '베르동 협곡',
-        rows: [{ time: '10:00', place: '베르동 협곡', desc: '전동보트 탑승' }]
-      },
-      'day10': {
-        title: 'Day 10 (10/10 토) - 남프랑스 근교 자유 일정',
-        cityName: 'Nice', dateStr: '2026-10-10', max: 20, min: 12, outfit: '드라이브 복장',
-        memo: '망통 또는 산레모 코스', mapQuery: 'Menton, France', mapName: '망통',
-        rows: [{ time: '종일', place: '망통 & 산레모', desc: '근교 드라이브' }]
-      },
-      'day11': {
-        title: 'Day 11 (10/11 일) - 생폴드방스 → 바르셀로나',
-        cityName: 'Nice', dateStr: '2026-10-11', max: 21, min: 13, outfit: '가벼운 겉옷',
-        memo: '렌터카 반납', mapQuery: 'Saint-Paul-de-Vence', mapName: '생폴드방스',
-        rows: [{ time: '17:25', place: '니스 공항', desc: '바르셀로나행 비행기' }]
-      },
-      'day12': {
-        title: 'Day 12 (10/12 월) - 바르셀로나 → 헬싱키',
-        cityName: 'Barcelona', dateStr: '2026-10-12', max: 22, min: 14, outfit: '편안한 옷차림',
-        memo: '경유지 면세점 확인', mapQuery: 'Josep Tarradellas Barcelona-El Prat Airport', mapName: '바르셀로나 공항',
-        rows: [{ time: '10:05', place: '바르셀로나 공항', desc: '한국행 출발' }]
-      },
-      'day13': {
-        title: 'Day 13 (10/13 화) - 인천공항 도착',
-        cityName: 'Helsinki', dateStr: '2026-10-13', max: 15, min: 8, outfit: '귀국 복장',
-        memo: '수하물 확인', mapQuery: 'Incheon International Airport Terminal 1', mapName: '인천공항 T1',
-        rows: [{ time: '11:20', place: 'Incheon International Airport Terminal 1', desc: '도착 및 일정 종료' }]
-      }
-    };
-
-    let currentActiveDayId = 'day1';
-
+    // 초기 실행
     window.addEventListener('DOMContentLoaded', () => {
+      initFirebase();
+      renderAll();
+    });
+
+    function initFirebase() {
+      const statusBar = document.getElementById('sync-status-bar');
+      try {
+        if (firebaseConfig.apiKey && !firebaseConfig.apiKey.includes("여기에")) {
+          firebase.initializeApp(firebaseConfig);
+          db = firebase.database();
+          isCloudConnected = true;
+          statusBar.innerText = "🟢 실시간 클라우드 연동됨 (가족들과 동기화 중)";
+          statusBar.style.background = "#dcfce7";
+          statusBar.style.color = "#166534";
+
+          // 실시간 리스너 연결
+          db.ref('familyTripData').on('value', (snapshot) => {
+            const cloudData = snapshot.val();
+            if (cloudData) {
+              appData = cloudData;
+              renderAll();
+            } else {
+              // 최초 클라우드 데이터 업로드
+              db.ref('familyTripData').set(defaultData);
+            }
+          });
+        } else {
+          statusBar.innerText = "🟡 Firebase 미설정: 로컬 모드로 작동 중 (코드 상단 firebaseConfig를 설정해주세요)";
+          loadFromLocalStorage();
+          renderAll();
+        }
+      } catch (err) {
+        console.error(err);
+        statusBar.innerText = "🔴 연동 에러: 로컬 저장소로 실행 중";
+        loadFromLocalStorage();
+        renderAll();
+      }
+    }
+
+    function syncData(fieldKey) {
+      if (isCloudConnected && db) {
+        db.ref('familyTripData/' + fieldKey).set(appData[fieldKey]);
+      } else {
+        localStorage.setItem('familyTripData', JSON.stringify(appData));
+      }
+    }
+
+    function loadFromLocalStorage() {
+      const local = localStorage.getItem('familyTripData');
+      if (local) {
+        appData = JSON.parse(local);
+      }
+    }
+
+    function renderAll() {
       renderSummaryTable();
+      renderDaySchedule(currentActiveDayId);
       renderTransportTable();
       renderAttractionTable();
       renderHotelTable();
       renderRestaurantList();
+      renderShoppingList();
+      renderChecklist();
       renderDiaryList();
-    });
+    }
 
     /* 전체 요약 관리 */
     function renderSummaryTable() {
-      const summaryList = JSON.parse(localStorage.getItem('travel_summary_list') || JSON.stringify(defaultSummary));
       const tbody = document.getElementById('summaryTableBody');
       tbody.innerHTML = '';
-      summaryList.forEach((item, index) => {
+      (appData.summary || []).forEach((item, index) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td><b>${item.day}</b></td>
@@ -1116,8 +1125,7 @@
     }
 
     function toggleSummaryEdit() {
-      const summaryList = JSON.parse(localStorage.getItem('travel_summary_list') || JSON.stringify(defaultSummary));
-      summaryList.forEach((_, index) => {
+      (appData.summary || []).forEach((_, index) => {
         document.getElementById(`sum-date-${index}`).style.display = 'none';
         document.getElementById(`sum-date-input-${index}`).style.display = 'block';
         document.getElementById(`sum-city-${index}`).style.display = 'none';
@@ -1126,319 +1134,148 @@
         document.getElementById(`sum-desc-input-${index}`).style.display = 'block';
       });
       document.getElementById('summary-edit-btn').style.display = 'none';
-      document.getElementById('summary-save-btn').style.display = 'inline-block';
+      document.getElementById('summary-save-btn').style.display = 'inline-flex';
     }
 
     function saveSummaryEdit() {
-      const summaryList = JSON.parse(localStorage.getItem('travel_summary_list') || JSON.stringify(defaultSummary));
-      summaryList.forEach((item, index) => {
+      (appData.summary || []).forEach((item, index) => {
         item.date = document.getElementById(`sum-date-input-${index}`).value.trim();
         item.city = document.getElementById(`sum-city-input-${index}`).value.trim();
         item.desc = document.getElementById(`sum-desc-input-${index}`).value.trim();
       });
-      localStorage.setItem('travel_summary_list', JSON.stringify(summaryList));
-      document.getElementById('summary-edit-btn').style.display = 'inline-block';
+      syncData('summary');
+      document.getElementById('summary-edit-btn').style.display = 'inline-flex';
       document.getElementById('summary-save-btn').style.display = 'none';
       renderSummaryTable();
     }
 
-    /* 여행일기 및 댓글 관리 */
-    function renderDiaryList() {
-      const container = document.getElementById('diaryFeedContainer');
-      let diaries = JSON.parse(localStorage.getItem('travel_diaries') || JSON.stringify(defaultDiary));
-      container.innerHTML = '';
-      if (diaries.length === 0) {
-        container.innerHTML = `<div style="text-align:center; color:#94a3b8; padding:20px;">작성된 여행일기가 없습니다. 첫 일기를 남겨보세요!</div>`;
-        return;
-      }
-      diaries.sort((a, b) => b.id - a.id);
+    /* Day 일정 관리 */
+    function renderDaySchedule(dayId) {
+      if (!appData.schedules || !appData.schedules[dayId]) return;
+      let dayData = appData.schedules[dayId];
 
-      diaries.forEach((item) => {
-        let photosHtml = '';
-        if (item.photos && item.photos.length > 0) {
-          photosHtml += '<div class="diary-photos-grid">';
-          item.photos.forEach(photoUrl => {
-            photosHtml += `<img src="${photoUrl}" class="diary-photo-thumb" onclick="viewFile('${photoUrl}', 'image/png', '일기 사진')">`;
-          });
-          photosHtml += '</div>';
-        }
+      document.getElementById('schedule-card-title').innerText = dayData.title;
+      loadForecast('active-weather-widget', dayData.cityName, dayData.dateStr, dayData.max, dayData.min);
 
-        // 댓글 HTML 생성
-        let commentsHtml = '';
-        const comments = item.comments || [];
-        comments.forEach(c => {
-          commentsHtml += `
-            <div class="comment-item">
-              <div>
-                <span class="comment-author">${c.author}:</span>
-                <span class="comment-text">${c.text}</span>
-              </div>
-              <button class="del-item-btn" style="padding:2px 6px; font-size:0.7rem;" onclick="deleteComment(${item.id}, ${c.id})">삭제</button>
-            </div>
-          `;
-        });
+      const memoView = document.getElementById('memo-view');
+      const memoTextarea = document.getElementById('memo-textarea');
+      const memoText = dayData.memo || '';
+      memoView.innerText = memoText;
+      memoTextarea.value = memoText;
 
-        const div = document.createElement('div');
-        div.className = 'diary-item-card';
-        div.innerHTML = `
-          <div class="diary-item-header">
-            <div>
-              <span class="diary-author">✏️ ${item.author}</span>
-              <span class="diary-date-badge" style="margin-left:8px;">${item.day}</span>
-            </div>
-            <div class="action-btn-group">
-              <button class="btn-edit" onclick="toggleDiaryEdit(${item.id})">수정</button>
-              <button class="del-item-btn" onclick="deleteDiary(${item.id})">삭제</button>
-            </div>
-          </div>
-          <div id="diary-view-${item.id}">
-            <div class="diary-body-text">${item.content}</div>
-            ${photosHtml}
-          </div>
-          <div id="diary-edit-form-${item.id}" style="display:none; margin-top:10px;">
-            <input type="text" id="diary-author-input-${item.id}" class="edit-input" value="${item.author}" placeholder="작성자">
-            <input type="text" id="diary-day-input-${item.id}" class="edit-input" value="${item.day}" placeholder="Day 정보">
-            <textarea id="diary-content-input-${item.id}" class="edit-input" rows="3" style="resize:vertical;">${item.content}</textarea>
-            <div style="text-align:right; margin-top:6px;">
-              <button class="btn-save" onclick="saveDiaryEdit(${item.id})">저장</button>
-            </div>
-          </div>
+      memoView.style.display = 'block';
+      memoTextarea.style.display = 'none';
+      document.getElementById('memo-edit-btn').style.display = 'inline-flex';
+      document.getElementById('memo-save-btn').style.display = 'none';
 
-          <!-- 댓글 영역 -->
-          <div class="comments-section">
-            <div class="comments-title">💬 댓글 (${comments.length})</div>
-            <div id="comments-list-${item.id}">
-              ${commentsHtml.length > 0 ? commentsHtml : '<div style="color:#94a3b8; font-size:0.8rem; margin-bottom:6px;">아직 댓글이 없습니다. 첫 댓글을 남겨보세요!</div>'}
-            </div>
-            <div class="comment-form">
-              <input type="text" id="comment-author-${item.id}" class="comment-input-name" placeholder="이름 (예: 엄마)">
-              <input type="text" id="comment-text-${item.id}" class="comment-input-text" placeholder="댓글 내용을 입력하세요..." onkeypress="handleCommentEnter(event, ${item.id})">
-              <button class="comment-submit-btn" onclick="addComment(${item.id})">댓글 등록</button>
-            </div>
-          </div>
-        `;
-        container.appendChild(div);
-      });
-    }
+      document.getElementById('active-map-box').src = `https://maps.google.com/maps?q=${encodeURIComponent(dayData.mapQuery)}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
+      document.getElementById('map-card-title').innerText = `🗺️ 여행 지도 (${dayData.mapName})`;
 
-    function addDiaryItem() {
-      const authorInput = document.getElementById('diaryAuthor');
-      const daySelect = document.getElementById('diaryDaySelect');
-      const contentInput = document.getElementById('diaryContent');
-      const photoInput = document.getElementById('diaryPhotoInput');
-
-      const author = authorInput.value.trim();
-      const day = daySelect.value;
-      const content = contentInput.value.trim();
-
-      if (!author || !content) {
-        alert('작성자 이름과 일기 내용을 모두 입력해 주세요!');
-        return;
-      }
-
-      const files = photoInput.files;
-      if (files.length > 0) {
-        let processedCount = 0;
-        let photoDataUrls = [];
-        Array.from(files).forEach(file => {
-          const reader = new FileReader();
-          reader.onload = function(e) {
-            photoDataUrls.push(e.target.result);
-            processedCount++;
-            if (processedCount === files.length) {
-              saveDiaryToStorage(author, day, content, photoDataUrls);
-            }
-          };
-          reader.readAsDataURL(file);
-        });
+      const gothicGuideCard = document.getElementById('gothic-guide-card');
+      const batlloGuideCard = document.getElementById('batllo-guide-card');
+      if (dayId === 'day3') {
+        gothicGuideCard.style.display = 'block';
+        batlloGuideCard.style.display = 'block';
       } else {
-        saveDiaryToStorage(author, day, content, []);
-      }
-    }
-
-    function saveDiaryToStorage(author, day, content, photos) {
-      let diaries = JSON.parse(localStorage.getItem('travel_diaries') || JSON.stringify(defaultDiary));
-      diaries.push({ id: Date.now(), author, day, content, photos, comments: [] });
-      localStorage.setItem('travel_diaries', JSON.stringify(diaries));
-
-      document.getElementById('diaryAuthor').value = '';
-      document.getElementById('diaryContent').value = '';
-      document.getElementById('diaryPhotoInput').value = '';
-      renderDiaryList();
-    }
-
-    function toggleDiaryEdit(id) {
-      document.getElementById(`diary-view-${id}`).style.display = 'none';
-      document.getElementById(`diary-edit-form-${id}`).style.display = 'block';
-    }
-
-    function saveDiaryEdit(id) {
-      const newAuthor = document.getElementById(`diary-author-input-${id}`).value.trim();
-      const newDay = document.getElementById(`diary-day-input-${id}`).value.trim();
-      const newContent = document.getElementById(`diary-content-input-${id}`).value.trim();
-
-      if (!newAuthor || !newContent) {
-        alert('작성자와 내용물은 비워둘 수 없습니다!');
-        return;
+        gothicGuideCard.style.display = 'none';
+        batlloGuideCard.style.display = 'none';
       }
 
-      let diaries = JSON.parse(localStorage.getItem('travel_diaries') || JSON.stringify(defaultDiary));
-      diaries = diaries.map(item => item.id === id ? { ...item, author: newAuthor, day: newDay, content: newContent } : item);
-      localStorage.setItem('travel_diaries', JSON.stringify(diaries));
-      renderDiaryList();
-    }
+      const tbody = document.getElementById('scheduleTableBody');
+      tbody.innerHTML = '';
 
-    function deleteDiary(id) {
-      if (confirm('이 여행일기를 삭제하시겠습니까?')) {
-        let diaries = JSON.parse(localStorage.getItem('travel_diaries') || JSON.stringify(defaultDiary));
-        diaries = diaries.filter(item => item.id !== id);
-        localStorage.setItem('travel_diaries', JSON.stringify(diaries));
-        renderDiaryList();
-      }
-    }
-
-    /* 댓글 추가 및 삭제 함수 */
-    function addComment(diaryId) {
-      const authorInput = document.getElementById(`comment-author-${diaryId}`);
-      const textInput = document.getElementById(`comment-text-${diaryId}`);
-      
-      const author = authorInput.value.trim();
-      const text = textInput.value.trim();
-
-      if (!author || !text) {
-        alert('작성자 이름과 댓글 내용을 모두 입력해주세요!');
-        return;
-      }
-
-      let diaries = JSON.parse(localStorage.getItem('travel_diaries') || JSON.stringify(defaultDiary));
-      diaries = diaries.map(item => {
-        if (item.id === diaryId) {
-          if (!item.comments) item.comments = [];
-          item.comments.push({ id: Date.now(), author, text });
-        }
-        return item;
-      });
-
-      localStorage.setItem('travel_diaries', JSON.stringify(diaries));
-      renderDiaryList();
-    }
-
-    function handleCommentEnter(event, diaryId) {
-      if (event.key === 'Enter') {
-        addComment(diaryId);
-      }
-    }
-
-    function deleteComment(diaryId, commentId) {
-      if (confirm('이 댓글을 삭제하시겠습니까?')) {
-        let diaries = JSON.parse(localStorage.getItem('travel_diaries') || JSON.stringify(defaultDiary));
-        diaries = diaries.map(item => {
-          if (item.id === diaryId && item.comments) {
-            item.comments = item.comments.filter(c => c.id !== commentId);
-          }
-          return item;
-        });
-        localStorage.setItem('travel_diaries', JSON.stringify(diaries));
-        renderDiaryList();
-      }
-    }
-
-    /* 맛집 탭 관리 */
-    function renderRestaurantList() {
-      const container = document.getElementById('restaurantContainer');
-      let items = JSON.parse(localStorage.getItem('travel_restaurants') || JSON.stringify(defaultRestaurants));
-      container.innerHTML = '';
-      if (items.length === 0) {
-        container.innerHTML = `<div style="text-align:center; color:#94a3b8; padding:20px;">등록된 맛집 정보가 없습니다.</div>`;
-        return;
-      }
-      const regions = [...new Set(items.map(i => i.region || '기타'))];
-      regions.sort();
-      regions.forEach(regionName => {
-        const regionItems = items.filter(i => (i.region || '기타') === regionName);
-        if (regionItems.length > 0) {
-          const groupDiv = document.createElement('div');
-          groupDiv.className = 'shop-region-group';
-          let html = `<div class="shop-region-title">📍 ${regionName}</div>`;
-          regionItems.forEach(item => {
-            html += `
-              <div class="checklist-item">
-                <div class="check-left" style="flex:1;">
-                  <div id="rest-view-${item.id}">
-                    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name)}" target="_blank" class="place-link" style="font-size:0.95rem; font-weight:bold;">${item.name}</a>
-                    <span style="color:#64748b; margin-left:6px; font-size:0.85rem;">(대표메뉴: ${item.menu})</span>
-                  </div>
-                  <div id="rest-edit-form-${item.id}" style="display:none; width:100%;">
-                    <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
-                      <input type="text" id="rest-reg-input-${item.id}" class="edit-input" value="${item.region}" style="width:90px; margin-bottom:0;" placeholder="지역">
-                      <input type="text" id="rest-name-input-${item.id}" class="edit-input" value="${item.name}" style="flex:1; min-width:110px; margin-bottom:0;" placeholder="가게명">
-                      <input type="text" id="rest-menu-input-${item.id}" class="edit-input" value="${item.menu}" style="flex:1; min-width:120px; margin-bottom:0;" placeholder="대표메뉴">
-                    </div>
-                  </div>
-                </div>
-                <div class="action-btn-group" style="margin-left:6px;">
-                  <button id="rest-edit-btn-${item.id}" class="btn-edit" onclick="toggleRestaurantEdit(${item.id})">수정</button>
-                  <button id="rest-save-btn-${item.id}" class="btn-save" style="display:none;" onclick="saveRestaurantEdit(${item.id})">저장</button>
-                  <button class="del-item-btn" onclick="deleteRestaurant(${item.id})">삭제</button>
-                </div>
-              </div>
-            `;
-          });
-          groupDiv.innerHTML = html;
-          container.appendChild(groupDiv);
-        }
+      (dayData.rows || []).forEach((row, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="col-time">
+            <span id="time-text-${index}">${row.time}</span>
+            <input type="text" id="time-input-${index}" class="edit-input" value="${row.time}" style="display:none;">
+          </td>
+          <td>
+            <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px; flex-wrap:wrap;">
+              <span id="place-text-${index}" class="place-link" onclick="updateMap('active-map-box', '${row.place}', '${row.place}')">${row.place}</span>
+              <input type="text" id="place-input-${index}" class="edit-input" value="${row.place}" style="display:none; margin-bottom:0;">
+              <a href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(row.place)}" target="_blank" class="dir-btn" title="길찾기">🚗</a>
+            </div>
+            <span id="desc-text-${index}" style="display:block; font-size:0.85rem; color:#475569;">${row.desc}</span>
+            <textarea id="desc-input-${index}" class="edit-input" style="display:none; resize:vertical;" rows="2">${row.desc}</textarea>
+          </td>
+          <td>
+            <div class="action-btn-group">
+              <button id="edit-btn-${index}" class="btn-edit" title="수정" onclick="toggleEdit('${dayId}', ${index})">▲</button>
+              <button id="save-btn-${index}" class="btn-save" title="저장" style="display:none;" onclick="saveEdit('${dayId}', ${index})">✓</button>
+              <button class="del-row-btn" title="삭제" onclick="deleteScheduleRow('${dayId}', ${index})">✕</button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
       });
     }
 
-    function addRestaurantItem() {
-      const regionInput = document.getElementById('newRestRegion');
-      const nameInput = document.getElementById('newRestName');
-      const menuInput = document.getElementById('newRestMenu');
-      const regionVal = regionInput.value.trim() || '기타';
-      const nameVal = nameInput.value.trim();
-      const menuVal = menuInput.value.trim();
-      if (!nameVal) { alert('가게명을 입력해 주세요!'); return; }
-      let items = JSON.parse(localStorage.getItem('travel_restaurants') || JSON.stringify(defaultRestaurants));
-      items.push({ id: Date.now(), region: regionVal, name: nameVal, menu: menuVal || '정보 없음' });
-      localStorage.setItem('travel_restaurants', JSON.stringify(items));
-      regionInput.value = '';
-      nameInput.value = '';
-      menuInput.value = '';
-      renderRestaurantList();
+    function toggleMemoEdit() {
+      document.getElementById('memo-view').style.display = 'none';
+      document.getElementById('memo-textarea').style.display = 'block';
+      document.getElementById('memo-edit-btn').style.display = 'none';
+      document.getElementById('memo-save-btn').style.display = 'inline-flex';
     }
 
-    function toggleRestaurantEdit(id) {
-      document.getElementById(`rest-view-${id}`).style.display = 'none';
-      document.getElementById(`rest-edit-form-${id}`).style.display = 'block';
-      document.getElementById(`rest-edit-btn-${id}`).style.display = 'none';
-      document.getElementById(`rest-save-btn-${id}`).style.display = 'inline-block';
+    function saveMemoEdit() {
+      const memoVal = document.getElementById('memo-textarea').value.trim();
+      appData.schedules[currentActiveDayId].memo = memoVal;
+      syncData('schedules');
+      renderDaySchedule(currentActiveDayId);
     }
 
-    function saveRestaurantEdit(id) {
-      const newRegion = document.getElementById(`rest-reg-input-${id}`).value.trim();
-      const newName = document.getElementById(`rest-name-input-${id}`).value.trim();
-      const newMenu = document.getElementById(`rest-menu-input-${id}`).value.trim();
-      if (!newName) { alert('가게명은 비워둘 수 없습니다!'); return; }
-      let items = JSON.parse(localStorage.getItem('travel_restaurants') || JSON.stringify(defaultRestaurants));
-      items = items.map(i => i.id === id ? { ...i, region: newRegion || '기타', name: newName, menu: newMenu } : i);
-      localStorage.setItem('travel_restaurants', JSON.stringify(items));
-      renderRestaurantList();
+    function toggleEdit(dayId, index) {
+      document.getElementById(`time-text-${index}`).style.display = 'none';
+      document.getElementById(`time-input-${index}`).style.display = 'block';
+      document.getElementById(`place-text-${index}`).style.display = 'none';
+      document.getElementById(`place-input-${index}`).style.display = 'block';
+      document.getElementById(`desc-text-${index}`).style.display = 'none';
+      document.getElementById(`desc-input-${index}`).style.display = 'block';
+      document.getElementById(`edit-btn-${index}`).style.display = 'none';
+      document.getElementById(`save-btn-${index}`).style.display = 'inline-flex';
     }
 
-    function deleteRestaurant(id) {
-      if (confirm('이 맛집 정보를 삭제하시겠습니까?')) {
-        let items = JSON.parse(localStorage.getItem('travel_restaurants') || JSON.stringify(defaultRestaurants));
-        items = items.filter(i => i.id !== id);
-        localStorage.setItem('travel_restaurants', JSON.stringify(items));
-        renderRestaurantList();
+    function saveEdit(dayId, index) {
+      const newTime = document.getElementById(`time-input-${index}`).value.trim();
+      const newPlace = document.getElementById(`place-input-${index}`).value.trim();
+      const newDesc = document.getElementById(`desc-input-${index}`).value.trim();
+      if (!newPlace) { alert('장소명은 비워둘 수 없습니다!'); return; }
+      appData.schedules[dayId].rows[index] = { time: newTime || '시간미정', place: newPlace, desc: newDesc };
+      appData.schedules[dayId].rows.sort((a, b) => a.time.localeCompare(b.time, 'ko', { numeric: true }));
+      syncData('schedules');
+      renderDaySchedule(dayId);
+    }
+
+    function addScheduleRow() {
+      const timeVal = document.getElementById('newSchedTime').value.trim();
+      const placeVal = document.getElementById('newSchedPlace').value.trim();
+      const descVal = document.getElementById('newSchedDesc').value.trim();
+      if (!placeVal) { alert('장소명을 입력해 주세요!'); return; }
+      if (!appData.schedules[currentActiveDayId].rows) appData.schedules[currentActiveDayId].rows = [];
+      appData.schedules[currentActiveDayId].rows.push({ time: timeVal || '시간미정', place: placeVal, desc: descVal || '' });
+      appData.schedules[currentActiveDayId].rows.sort((a, b) => a.time.localeCompare(b.time, 'ko', { numeric: true }));
+      syncData('schedules');
+      document.getElementById('newSchedTime').value = '';
+      document.getElementById('newSchedPlace').value = '';
+      document.getElementById('newSchedDesc').value = '';
+      renderDaySchedule(currentActiveDayId);
+    }
+
+    function deleteScheduleRow(dayId, index) {
+      if (confirm('이 일정을 삭제하시겠습니까?')) {
+        appData.schedules[dayId].rows.splice(index, 1);
+        syncData('schedules');
+        renderDaySchedule(dayId);
       }
     }
 
-    /* 항공권 & 렌터카 관리 */
+    /* 항공권 & 렌터카 */
     function renderTransportTable() {
-      const list = JSON.parse(localStorage.getItem('travel_transport') || JSON.stringify(defaultTransport));
       const tbody = document.getElementById('transportTableBody');
       tbody.innerHTML = '';
+      const list = appData.transport || [];
       if (list.length === 0) {
         tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#94a3b8;">등록된 항공권/렌터카 정보가 없습니다.</td></tr>`;
         return;
@@ -1484,9 +1321,9 @@
           </td>
           <td>
             <div class="action-btn-group">
-              <button id="trans-edit-row-btn-${index}" class="btn-edit" onclick="toggleTransportRowEdit(${index})">수정</button>
-              <button id="trans-save-row-btn-${index}" class="btn-save" style="display:none;" onclick="saveTransportRowEdit(${index})">저장</button>
-              <button class="del-row-btn" onclick="deleteTransportRow(${item.id})">삭제</button>
+              <button id="trans-edit-row-btn-${index}" class="btn-edit" title="수정" onclick="toggleTransportRowEdit(${index})">▲</button>
+              <button id="trans-save-row-btn-${index}" class="btn-save" title="저장" style="display:none;" onclick="saveTransportRowEdit(${index})">✓</button>
+              <button class="del-row-btn" title="삭제" onclick="deleteTransportRow(${item.id})">✕</button>
             </div>
           </td>
         `;
@@ -1499,9 +1336,9 @@
       const agency = document.getElementById('newTransAgency').value.trim();
       const info = document.getElementById('newTransInfo').value.trim();
       if (!route) { alert('구간명은 필수 입력 사항입니다!'); return; }
-      let list = JSON.parse(localStorage.getItem('travel_transport') || JSON.stringify(defaultTransport));
-      list.push({ id: Date.now(), route, agency: agency || '', info: info || '', files: [] });
-      localStorage.setItem('travel_transport', JSON.stringify(list));
+      if (!appData.transport) appData.transport = [];
+      appData.transport.push({ id: Date.now(), route, agency: agency || '', info: info || '', files: [] });
+      syncData('transport');
       document.getElementById('newTransRoute').value = '';
       document.getElementById('newTransAgency').value = '';
       document.getElementById('newTransInfo').value = '';
@@ -1516,38 +1353,34 @@
       document.getElementById(`trans-info-${index}`).style.display = 'none';
       document.getElementById(`trans-info-input-${index}`).style.display = 'block';
       document.getElementById(`trans-edit-row-btn-${index}`).style.display = 'none';
-      document.getElementById(`trans-save-row-btn-${index}`).style.display = 'inline-block';
+      document.getElementById(`trans-save-row-btn-${index}`).style.display = 'inline-flex';
     }
 
     function saveTransportRowEdit(index) {
-      let list = JSON.parse(localStorage.getItem('travel_transport') || JSON.stringify(defaultTransport));
-      list[index].route = document.getElementById(`trans-route-input-${index}`).value.trim();
-      list[index].agency = document.getElementById(`trans-agency-input-${index}`).value.trim();
-      list[index].info = document.getElementById(`trans-info-input-${index}`).value.trim();
-      localStorage.setItem('travel_transport', JSON.stringify(list));
+      appData.transport[index].route = document.getElementById(`trans-route-input-${index}`).value.trim();
+      appData.transport[index].agency = document.getElementById(`trans-agency-input-${index}`).value.trim();
+      appData.transport[index].info = document.getElementById(`trans-info-input-${index}`).value.trim();
+      syncData('transport');
       renderTransportTable();
     }
 
     function deleteTransportRow(id) {
       if (confirm('이 항목을 삭제하시겠습니까?')) {
-        let list = JSON.parse(localStorage.getItem('travel_transport') || JSON.stringify(defaultTransport));
-        list = list.filter(item => item.id !== id);
-        localStorage.setItem('travel_transport', JSON.stringify(list));
+        appData.transport = appData.transport.filter(item => item.id !== id);
+        syncData('transport');
         renderTransportTable();
       }
     }
 
     function toggleTransportEdit() {
-      const list = JSON.parse(localStorage.getItem('travel_transport') || JSON.stringify(defaultTransport));
-      list.forEach((_, index) => toggleTransportRowEdit(index));
+      (appData.transport || []).forEach((_, index) => toggleTransportRowEdit(index));
       document.getElementById('transport-edit-btn').style.display = 'none';
-      document.getElementById('transport-save-btn').style.display = 'inline-block';
+      document.getElementById('transport-save-btn').style.display = 'inline-flex';
     }
 
     function saveTransportEdit() {
-      const list = JSON.parse(localStorage.getItem('travel_transport') || JSON.stringify(defaultTransport));
-      list.forEach((_, index) => saveTransportRowEdit(index));
-      document.getElementById('transport-edit-btn').style.display = 'inline-block';
+      (appData.transport || []).forEach((_, index) => saveTransportRowEdit(index));
+      document.getElementById('transport-edit-btn').style.display = 'inline-flex';
       document.getElementById('transport-save-btn').style.display = 'none';
     }
 
@@ -1556,10 +1389,9 @@
       if (!file) return;
       const reader = new FileReader();
       reader.onload = function(e) {
-        let list = JSON.parse(localStorage.getItem('travel_transport') || JSON.stringify(defaultTransport));
-        if (!list[index].files) list[index].files = [];
-        list[index].files.push({ name: file.name, type: file.type, data: e.target.result });
-        localStorage.setItem('travel_transport', JSON.stringify(list));
+        if (!appData.transport[index].files) appData.transport[index].files = [];
+        appData.transport[index].files.push({ name: file.name, type: file.type, data: e.target.result });
+        syncData('transport');
         renderTransportTable();
       };
       reader.readAsDataURL(file);
@@ -1567,18 +1399,17 @@
 
     function deleteTransportFile(itemIndex, fileIndex) {
       if (confirm('이 파일을 삭제하시겠습니까?')) {
-        let list = JSON.parse(localStorage.getItem('travel_transport') || JSON.stringify(defaultTransport));
-        list[itemIndex].files.splice(fileIndex, 1);
-        localStorage.setItem('travel_transport', JSON.stringify(list));
+        appData.transport[itemIndex].files.splice(fileIndex, 1);
+        syncData('transport');
         renderTransportTable();
       }
     }
 
     /* 관광지 예약 관리 */
     function renderAttractionTable() {
-      const list = JSON.parse(localStorage.getItem('travel_attractions') || JSON.stringify(defaultAttractions));
       const tbody = document.getElementById('attractionTableBody');
       tbody.innerHTML = '';
+      const list = appData.attractions || [];
       if (list.length === 0) {
         tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#94a3b8;">등록된 관광지 예약 정보가 없습니다.</td></tr>`;
         return;
@@ -1624,9 +1455,9 @@
           </td>
           <td>
             <div class="action-btn-group">
-              <button id="attr-edit-row-btn-${index}" class="btn-edit" onclick="toggleAttractionRowEdit(${index})">수정</button>
-              <button id="attr-save-row-btn-${index}" class="btn-save" style="display:none;" onclick="saveAttractionRowEdit(${index})">저장</button>
-              <button class="del-row-btn" onclick="deleteAttractionRow(${item.id})">삭제</button>
+              <button id="attr-edit-row-btn-${index}" class="btn-edit" title="수정" onclick="toggleAttractionRowEdit(${index})">▲</button>
+              <button id="attr-save-row-btn-${index}" class="btn-save" title="저장" style="display:none;" onclick="saveAttractionRowEdit(${index})">✓</button>
+              <button class="del-row-btn" title="삭제" onclick="deleteAttractionRow(${item.id})">✕</button>
             </div>
           </td>
         `;
@@ -1639,9 +1470,9 @@
       const detail = document.getElementById('newAttrableDetail').value.trim();
       const price = document.getElementById('newAttrablePrice').value.trim();
       if (!name) { alert('관광지명은 필수 입력 사항입니다!'); return; }
-      let list = JSON.parse(localStorage.getItem('travel_attractions') || JSON.stringify(defaultAttractions));
-      list.push({ id: Date.now(), name, detail: detail || '', price: price || '', files: [] });
-      localStorage.setItem('travel_attractions', JSON.stringify(list));
+      if (!appData.attractions) appData.attractions = [];
+      appData.attractions.push({ id: Date.now(), name, detail: detail || '', price: price || '', files: [] });
+      syncData('attractions');
       document.getElementById('newAttrableName').value = '';
       document.getElementById('newAttrableDetail').value = '';
       document.getElementById('newAttrablePrice').value = '';
@@ -1656,38 +1487,34 @@
       document.getElementById(`attr-price-${index}`).style.display = 'none';
       document.getElementById(`attr-price-input-${index}`).style.display = 'block';
       document.getElementById(`attr-edit-row-btn-${index}`).style.display = 'none';
-      document.getElementById(`attr-save-row-btn-${index}`).style.display = 'inline-block';
+      document.getElementById(`attr-save-row-btn-${index}`).style.display = 'inline-flex';
     }
 
     function saveAttractionRowEdit(index) {
-      let list = JSON.parse(localStorage.getItem('travel_attractions') || JSON.stringify(defaultAttractions));
-      list[index].name = document.getElementById(`attr-name-input-${index}`).value.trim();
-      list[index].detail = document.getElementById(`attr-detail-input-${index}`).value.trim();
-      list[index].price = document.getElementById(`attr-price-input-${index}`).value.trim();
-      localStorage.setItem('travel_attractions', JSON.stringify(list));
+      appData.attractions[index].name = document.getElementById(`attr-name-input-${index}`).value.trim();
+      appData.attractions[index].detail = document.getElementById(`attr-detail-input-${index}`).value.trim();
+      appData.attractions[index].price = document.getElementById(`attr-price-input-${index}`).value.trim();
+      syncData('attractions');
       renderAttractionTable();
     }
 
     function deleteAttractionRow(id) {
       if (confirm('이 항목을 삭제하시겠습니까?')) {
-        let list = JSON.parse(localStorage.getItem('travel_attractions') || JSON.stringify(defaultAttractions));
-        list = list.filter(item => item.id !== id);
-        localStorage.setItem('travel_attractions', JSON.stringify(list));
+        appData.attractions = appData.attractions.filter(item => item.id !== id);
+        syncData('attractions');
         renderAttractionTable();
       }
     }
 
     function toggleAttractionEdit() {
-      const list = JSON.parse(localStorage.getItem('travel_attractions') || JSON.stringify(defaultAttractions));
-      list.forEach((_, index) => toggleAttractionRowEdit(index));
+      (appData.attractions || []).forEach((_, index) => toggleAttractionRowEdit(index));
       document.getElementById('attraction-edit-btn').style.display = 'none';
-      document.getElementById('attraction-save-btn').style.display = 'inline-block';
+      document.getElementById('attraction-save-btn').style.display = 'inline-flex';
     }
 
     function saveAttractionEdit() {
-      const list = JSON.parse(localStorage.getItem('travel_attractions') || JSON.stringify(defaultAttractions));
-      list.forEach((_, index) => saveAttractionRowEdit(index));
-      document.getElementById('attraction-edit-btn').style.display = 'inline-block';
+      (appData.attractions || []).forEach((_, index) => saveAttractionRowEdit(index));
+      document.getElementById('attraction-edit-btn').style.display = 'inline-flex';
       document.getElementById('attraction-save-btn').style.display = 'none';
     }
 
@@ -1696,10 +1523,9 @@
       if (!file) return;
       const reader = new FileReader();
       reader.onload = function(e) {
-        let list = JSON.parse(localStorage.getItem('travel_attractions') || JSON.stringify(defaultAttractions));
-        if (!list[index].files) list[index].files = [];
-        list[index].files.push({ name: file.name, type: file.type, data: e.target.result });
-        localStorage.setItem('travel_attractions', JSON.stringify(list));
+        if (!appData.attractions[index].files) appData.attractions[index].files = [];
+        appData.attractions[index].files.push({ name: file.name, type: file.type, data: e.target.result });
+        syncData('attractions');
         renderAttractionTable();
       };
       reader.readAsDataURL(file);
@@ -1707,18 +1533,17 @@
 
     function deleteAttractionFile(itemIndex, fileIndex) {
       if (confirm('이 파일을 삭제하시겠습니까?')) {
-        let list = JSON.parse(localStorage.getItem('travel_attractions') || JSON.stringify(defaultAttractions));
-        list[itemIndex].files.splice(fileIndex, 1);
-        localStorage.setItem('travel_attractions', JSON.stringify(list));
+        appData.attractions[itemIndex].files.splice(fileIndex, 1);
+        syncData('attractions');
         renderAttractionTable();
       }
     }
 
-    /* 숙소 정보 관리 */
+    /* 숙소 관리 */
     function renderHotelTable() {
-      const list = JSON.parse(localStorage.getItem('travel_hotels') || JSON.stringify(defaultHotels));
       const tbody = document.getElementById('hotelTableBody');
       tbody.innerHTML = '';
+      const list = appData.hotels || [];
       if (list.length === 0) {
         tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#94a3b8;">등록된 숙소 정보가 없습니다.</td></tr>`;
         return;
@@ -1752,9 +1577,9 @@
           </td>
           <td>
             <div class="action-btn-group">
-              <button id="hotel-edit-btn-${index}" class="btn-edit" onclick="toggleHotelEdit(${index})">수정</button>
-              <button id="hotel-save-btn-${index}" class="btn-save" style="display:none;" onclick="saveHotelEdit(${index})">저장</button>
-              <button class="del-row-btn" onclick="deleteHotel(${hotel.id})">삭제</button>
+              <button id="hotel-edit-btn-${index}" class="btn-edit" title="수정" onclick="toggleHotelEdit(${index})">▲</button>
+              <button id="hotel-save-btn-${index}" class="btn-save" title="저장" style="display:none;" onclick="saveHotelEdit(${index})">✓</button>
+              <button class="del-row-btn" title="삭제" onclick="deleteHotel(${hotel.id})">✕</button>
             </div>
           </td>
         `;
@@ -1769,9 +1594,9 @@
       const addr = document.getElementById('newHotelAddress').value.trim();
       const link = document.getElementById('newHotelLink').value.trim();
       if (!city || !addr) { alert('여행지와 구글 주소는 필수 입력 사항입니다!'); return; }
-      let list = JSON.parse(localStorage.getItem('travel_hotels') || JSON.stringify(defaultHotels));
-      list.push({ id: Date.now(), category: cat || '호텔', city, time: time || '15:00 / 11:00', address: addr, link: link || '' });
-      localStorage.setItem('travel_hotels', JSON.stringify(list));
+      if (!appData.hotels) appData.hotels = [];
+      appData.hotels.push({ id: Date.now(), category: cat || '호텔', city, time: time || '15:00 / 11:00', address: addr, link: link || '' });
+      syncData('hotels');
       document.getElementById('newHotelCategory').value = '';
       document.getElementById('newHotelCity').value = '';
       document.getElementById('newHotelTime').value = '';
@@ -1792,37 +1617,418 @@
       document.getElementById(`hotel-link-${index}`).style.display = 'none';
       document.getElementById(`hotel-link-input-${index}`).style.display = 'block';
       document.getElementById(`hotel-edit-btn-${index}`).style.display = 'none';
-      document.getElementById(`hotel-save-btn-${index}`).style.display = 'inline-block';
+      document.getElementById(`hotel-save-btn-${index}`).style.display = 'inline-flex';
     }
 
     function saveHotelEdit(index) {
-      let list = JSON.parse(localStorage.getItem('travel_hotels') || JSON.stringify(defaultHotels));
-      list[index].category = document.getElementById(`hotel-cat-input-${index}`).value.trim();
-      list[index].city = document.getElementById(`hotel-city-input-${index}`).value.trim();
-      list[index].time = document.getElementById(`hotel-time-input-${index}`).value.trim();
-      list[index].address = document.getElementById(`hotel-addr-input-${index}`).value.trim();
-      list[index].link = document.getElementById(`hotel-link-input-${index}`).value.trim();
-      localStorage.setItem('travel_hotels', JSON.stringify(list));
+      appData.hotels[index].category = document.getElementById(`hotel-cat-input-${index}`).value.trim();
+      appData.hotels[index].city = document.getElementById(`hotel-city-input-${index}`).value.trim();
+      appData.hotels[index].time = document.getElementById(`hotel-time-input-${index}`).value.trim();
+      appData.hotels[index].address = document.getElementById(`hotel-addr-input-${index}`).value.trim();
+      appData.hotels[index].link = document.getElementById(`hotel-link-input-${index}`).value.trim();
+      syncData('hotels');
       renderHotelTable();
     }
 
     function deleteHotel(id) {
       if (confirm('이 숙소 정보를 삭제하시겠습니까?')) {
-        let list = JSON.parse(localStorage.getItem('travel_hotels') || JSON.stringify(defaultHotels));
-        list = list.filter(h => h.id !== id);
-        localStorage.setItem('travel_hotels', JSON.stringify(list));
+        appData.hotels = appData.hotels.filter(h => h.id !== id);
+        syncData('hotels');
         renderHotelTable();
       }
     }
 
-    function viewFile(dataUrl, fileType, fileName) {
-      let win = window.open();
-      win.document.write(`<title>${fileName}</title>`);
-      if (fileType && fileType.includes('image')) {
-        win.document.write(`<img src="${dataUrl}" style="max-width:100%;">`);
-      } else {
-        win.document.write(`<iframe src="${dataUrl}" style="width:100%; height:100vh; border:none;"></iframe>`);
+    /* 맛집 관리 */
+    function renderRestaurantList() {
+      const container = document.getElementById('restaurantContainer');
+      container.innerHTML = '';
+      const items = appData.restaurants || [];
+      if (items.length === 0) {
+        container.innerHTML = `<div style="text-align:center; color:#94a3b8; padding:20px;">등록된 맛집 정보가 없습니다.</div>`;
+        return;
       }
+      const regions = [...new Set(items.map(i => i.region || '기타'))].sort();
+      regions.forEach(regionName => {
+        const regionItems = items.filter(i => (i.region || '기타') === regionName);
+        if (regionItems.length > 0) {
+          const groupDiv = document.createElement('div');
+          groupDiv.className = 'shop-region-group';
+          let html = `<div class="shop-region-title">📍 ${regionName}</div>`;
+          regionItems.forEach(item => {
+            html += `
+              <div class="checklist-item">
+                <div class="check-left" style="flex:1;">
+                  <div id="rest-view-${item.id}">
+                    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name)}" target="_blank" class="place-link" style="font-size:0.95rem; font-weight:bold;">${item.name}</a>
+                    <span style="color:#64748b; margin-left:6px; font-size:0.85rem;">(대표메뉴: ${item.menu})</span>
+                  </div>
+                  <div id="rest-edit-form-${item.id}" style="display:none; width:100%;">
+                    <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+                      <input type="text" id="rest-reg-input-${item.id}" class="edit-input" value="${item.region}" style="width:90px; margin-bottom:0;" placeholder="지역">
+                      <input type="text" id="rest-name-input-${item.id}" class="edit-input" value="${item.name}" style="flex:1; min-width:110px; margin-bottom:0;" placeholder="가게명">
+                      <input type="text" id="rest-menu-input-${item.id}" class="edit-input" value="${item.menu}" style="flex:1; min-width:120px; margin-bottom:0;" placeholder="대표메뉴">
+                    </div>
+                  </div>
+                </div>
+                <div class="action-btn-group" style="margin-left:6px;">
+                  <button id="rest-edit-btn-${item.id}" class="btn-edit" title="수정" onclick="toggleRestaurantEdit(${item.id})">▲</button>
+                  <button id="rest-save-btn-${item.id}" class="btn-save" title="저장" style="display:none;" onclick="saveRestaurantEdit(${item.id})">✓</button>
+                  <button class="del-item-btn" title="삭제" onclick="deleteRestaurant(${item.id})">✕</button>
+                </div>
+              </div>
+            `;
+          });
+          groupDiv.innerHTML = html;
+          container.appendChild(groupDiv);
+        }
+      });
+    }
+
+    function addRestaurantItem() {
+      const regionInput = document.getElementById('newRestRegion');
+      const nameInput = document.getElementById('newRestName');
+      const menuInput = document.getElementById('newRestMenu');
+      const regionVal = regionInput.value.trim() || '기타';
+      const nameVal = nameInput.value.trim();
+      const menuVal = menuInput.value.trim();
+      if (!nameVal) { alert('가게명을 입력해 주세요!'); return; }
+      if (!appData.restaurants) appData.restaurants = [];
+      appData.restaurants.push({ id: Date.now(), region: regionVal, name: nameVal, menu: menuVal || '정보 없음' });
+      syncData('restaurants');
+      regionInput.value = '';
+      nameInput.value = '';
+      menuInput.value = '';
+      renderRestaurantList();
+    }
+
+    function toggleRestaurantEdit(id) {
+      document.getElementById(`rest-view-${id}`).style.display = 'none';
+      document.getElementById(`rest-edit-form-${id}`).style.display = 'block';
+      document.getElementById(`rest-edit-btn-${id}`).style.display = 'none';
+      document.getElementById(`rest-save-btn-${id}`).style.display = 'inline-flex';
+    }
+
+    function saveRestaurantEdit(id) {
+      const newRegion = document.getElementById(`rest-reg-input-${id}`).value.trim();
+      const newName = document.getElementById(`rest-name-input-${id}`).value.trim();
+      const newMenu = document.getElementById(`rest-menu-input-${id}`).value.trim();
+      if (!newName) { alert('가게명은 비워둘 수 없습니다!'); return; }
+      appData.restaurants = appData.restaurants.map(i => i.id === id ? { ...i, region: newRegion || '기타', name: newName, menu: newMenu } : i);
+      syncData('restaurants');
+      renderRestaurantList();
+    }
+
+    function deleteRestaurant(id) {
+      if (confirm('이 맛집 정보를 삭제하시겠습니까?')) {
+        appData.restaurants = appData.restaurants.filter(i => i.id !== id);
+        syncData('restaurants');
+        renderRestaurantList();
+      }
+    }
+
+    /* 쇼핑템 관리 */
+    function renderShoppingList() {
+      const container = document.getElementById('shoppingContainer');
+      container.innerHTML = '';
+      const items = appData.shopping || [];
+      const regions = [...new Set(items.map(i => i.region || '기타'))].sort();
+      regions.forEach(regionName => {
+        const regionItems = items.filter(i => (i.region || '기타') === regionName);
+        if (regionItems.length > 0) {
+          const groupDiv = document.createElement('div');
+          groupDiv.className = 'shop-region-group';
+          let html = `<div class="shop-region-title">📍 ${regionName}</div>`;
+          regionItems.forEach(item => {
+            html += `
+              <div class="checklist-item">
+                <div class="check-left">
+                  <span>🛍️ ${item.text}</span>
+                </div>
+                <button class="del-item-btn" title="삭제" onclick="deleteShopping(${item.id})">✕</button>
+              </div>
+            `;
+          });
+          groupDiv.innerHTML = html;
+          container.appendChild(groupDiv);
+        }
+      });
+    }
+
+    function addShoppingItem() {
+      const regionInput = document.getElementById('newShopRegion');
+      const itemInput = document.getElementById('newShopItem');
+      const regionVal = regionInput.value.trim() || '기타';
+      const itemVal = itemInput.value.trim();
+      if (!itemVal) { alert('추천 쇼핑템 내용을 입력해 주세요!'); return; }
+      if (!appData.shopping) appData.shopping = [];
+      appData.shopping.push({ id: Date.now(), region: regionVal, text: itemVal });
+      syncData('shopping');
+      regionInput.value = '';
+      itemInput.value = '';
+      renderShoppingList();
+    }
+
+    function deleteShopping(id) {
+      if (confirm('이 항목을 삭제하시겠습니까?')) {
+        appData.shopping = appData.shopping.filter(i => i.id !== id);
+        syncData('shopping');
+        renderShoppingList();
+      }
+    }
+
+    /* 준비물 관리 */
+    function renderChecklist() {
+      const container = document.getElementById('checklistContainer');
+      container.innerHTML = '';
+      (appData.checklist || []).forEach(item => {
+        const div = document.createElement('div');
+        div.className = `checklist-item ${item.checked ? 'checked' : ''}`;
+        div.innerHTML = `
+          <div class="check-left">
+            <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="toggleCheck(${item.id})">
+            <span>${item.text}</span>
+          </div>
+          <button class="del-item-btn" title="삭제" onclick="deleteChecklist(${item.id})">✕</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function addChecklistItem() {
+      const input = document.getElementById('newCheckItem');
+      if (!input.value.trim()) return;
+      if (!appData.checklist) appData.checklist = [];
+      appData.checklist.push({ id: Date.now(), text: input.value.trim(), checked: false });
+      syncData('checklist');
+      input.value = '';
+      renderChecklist();
+    }
+
+    function toggleCheck(id) {
+      appData.checklist = appData.checklist.map(i => i.id === id ? { ...i, checked: !i.checked } : i);
+      syncData('checklist');
+      renderChecklist();
+    }
+
+    function deleteChecklist(id) {
+      appData.checklist = appData.checklist.filter(i => i.id !== id);
+      syncData('checklist');
+      renderChecklist();
+    }
+
+    /* 여행일기 및 댓글 관리 */
+    function renderDiaryList() {
+      const container = document.getElementById('diaryFeedContainer');
+      container.innerHTML = '';
+      let diaries = (appData.diaries || []).slice();
+      if (diaries.length === 0) {
+        container.innerHTML = `<div style="text-align:center; color:#94a3b8; padding:20px;">작성된 여행일기가 없습니다. 첫 일기를 남겨보세요!</div>`;
+        return;
+      }
+      diaries.sort((a, b) => b.id - a.id);
+
+      diaries.forEach((item) => {
+        let photosHtml = '';
+        if (item.photos && item.photos.length > 0) {
+          photosHtml += '<div class="diary-photos-grid">';
+          item.photos.forEach(photoUrl => {
+            photosHtml += `<img src="${photoUrl}" class="diary-photo-thumb" onclick="viewFile('${photoUrl}', 'image/png', '일기 사진')">`;
+          });
+          photosHtml += '</div>';
+        }
+
+        let commentsHtml = '';
+        const comments = item.comments || [];
+        comments.forEach(c => {
+          commentsHtml += `
+            <div class="comment-item">
+              <div>
+                <span class="comment-author">${c.author}:</span>
+                <span class="comment-text">${c.text}</span>
+              </div>
+              <button class="del-item-btn" style="width:20px; height:20px; font-size:0.7rem;" title="댓글 삭제" onclick="deleteComment(${item.id}, ${c.id})">✕</button>
+            </div>
+          `;
+        });
+
+        const div = document.createElement('div');
+        div.className = 'diary-item-card';
+        div.innerHTML = `
+          <div class="diary-item-header">
+            <div>
+              <span class="diary-author">✏️ ${item.author}</span>
+              <span class="diary-date-badge" style="margin-left:8px;">${item.day}</span>
+            </div>
+            <div class="action-btn-group">
+              <button class="btn-edit" title="수정" onclick="toggleDiaryEdit(${item.id})">▲</button>
+              <button class="del-item-btn" title="삭제" onclick="deleteDiary(${item.id})">✕</button>
+            </div>
+          </div>
+          <div id="diary-view-${item.id}">
+            <div class="diary-body-text">${item.content}</div>
+            ${photosHtml}
+          </div>
+          <div id="diary-edit-form-${item.id}" style="display:none; margin-top:10px;">
+            <input type="text" id="diary-author-input-${item.id}" class="edit-input" value="${item.author}" placeholder="작성자">
+            <input type="text" id="diary-day-input-${item.id}" class="edit-input" value="${item.day}" placeholder="Day 정보">
+            <textarea id="diary-content-input-${item.id}" class="edit-input" rows="3" style="resize:vertical;">${item.content}</textarea>
+            <div style="text-align:right; margin-top:6px;">
+              <button class="btn-save" title="저장" onclick="saveDiaryEdit(${item.id})">✓</button>
+            </div>
+          </div>
+
+          <div class="comments-section">
+            <div class="comments-title">💬 댓글 (${comments.length})</div>
+            <div id="comments-list-${item.id}">
+              ${commentsHtml.length > 0 ? commentsHtml : '<div style="color:#94a3b8; font-size:0.8rem; margin-bottom:6px;">아직 댓글이 없습니다. 첫 댓글을 남겨보세요!</div>'}
+            </div>
+            <div class="comment-form">
+              <input type="text" id="comment-author-${item.id}" class="comment-input-name" placeholder="이름 (예: 엄마)">
+              <input type="text" id="comment-text-${item.id}" class="comment-input-text" placeholder="댓글 내용을 입력하세요..." onkeypress="handleCommentEnter(event, ${item.id})">
+              <button class="comment-submit-btn" onclick="addComment(${item.id})">댓글 등록</button>
+            </div>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function addDiaryItem() {
+      const author = document.getElementById('diaryAuthor').value.trim();
+      const day = document.getElementById('diaryDaySelect').value;
+      const content = document.getElementById('diaryContent').value.trim();
+      const photoInput = document.getElementById('diaryPhotoInput');
+
+      if (!author || !content) { alert('작성자 이름과 일기 내용을 모두 입력해 주세요!'); return; }
+
+      const files = photoInput.files;
+      if (files.length > 0) {
+        let processed = 0;
+        let photos = [];
+        Array.from(files).forEach(file => {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            photos.push(e.target.result);
+            processed++;
+            if (processed === files.length) {
+              saveDiaryToData(author, day, content, photos);
+            }
+          };
+          reader.readAsDataURL(file);
+        });
+      } else {
+        saveDiaryToData(author, day, content, []);
+      }
+    }
+
+    function saveDiaryToData(author, day, content, photos) {
+      if (!appData.diaries) appData.diaries = [];
+      appData.diaries.push({ id: Date.now(), author, day, content, photos, comments: [] });
+      syncData('diaries');
+      document.getElementById('diaryAuthor').value = '';
+      document.getElementById('diaryContent').value = '';
+      document.getElementById('diaryPhotoInput').value = '';
+      renderDiaryList();
+    }
+
+    function toggleDiaryEdit(id) {
+      document.getElementById(`diary-view-${id}`).style.display = 'none';
+      document.getElementById(`diary-edit-form-${id}`).style.display = 'block';
+    }
+
+    function saveDiaryEdit(id) {
+      const newAuthor = document.getElementById(`diary-author-input-${id}`).value.trim();
+      const newDay = document.getElementById(`diary-day-input-${id}`).value.trim();
+      const newContent = document.getElementById(`diary-content-input-${id}`).value.trim();
+      if (!newAuthor || !newContent) { alert('작성자와 내용은 비워둘 수 없습니다!'); return; }
+      appData.diaries = appData.diaries.map(item => item.id === id ? { ...item, author: newAuthor, day: newDay, content: newContent } : item);
+      syncData('diaries');
+      renderDiaryList();
+    }
+
+    function deleteDiary(id) {
+      if (confirm('이 여행일기를 삭제하시겠습니까?')) {
+        appData.diaries = appData.diaries.filter(item => item.id !== id);
+        syncData('diaries');
+        renderDiaryList();
+      }
+    }
+
+    function addComment(diaryId) {
+      const author = document.getElementById(`comment-author-${diaryId}`).value.trim();
+      const text = document.getElementById(`comment-text-${diaryId}`).value.trim();
+      if (!author || !text) { alert('이름과 댓글 내용을 모두 입력해주세요!'); return; }
+      appData.diaries = appData.diaries.map(item => {
+        if (item.id === diaryId) {
+          if (!item.comments) item.comments = [];
+          item.comments.push({ id: Date.now(), author, text });
+        }
+        return item;
+      });
+      syncData('diaries');
+      renderDiaryList();
+    }
+
+    function handleCommentEnter(event, diaryId) {
+      if (event.key === 'Enter') addComment(diaryId);
+    }
+
+    function deleteComment(diaryId, commentId) {
+      if (confirm('이 댓글을 삭제하시겠습니까?')) {
+        appData.diaries = appData.diaries.map(item => {
+          if (item.id === diaryId && item.comments) {
+            item.comments = item.comments.filter(c => c.id !== commentId);
+          }
+          return item;
+        });
+        syncData('diaries');
+        renderDiaryList();
+      }
+    }
+
+    /* 날씨, 지도, 탭 전환 */
+    async function loadForecast(widgetId, cityName, dateStr, defaultMax, defaultMin) {
+      const widgetDiv = document.getElementById(widgetId);
+      if (!widgetDiv) return;
+      const city = cityCoords[cityName];
+      const dateObj = new Date(dateStr + 'T00:00:00');
+      const formattedDate = `${dateObj.getMonth() + 1}월 ${dateObj.getDate()}일`;
+      try {
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&daily=temperature_2m_max,temperature_2m_min,weathercode&start_date=${dateStr}&end_date=${dateStr}&timezone=auto`;
+        const res = await fetch(url);
+        const data = await res.json();
+        let maxTemp = defaultMax;
+        let minTemp = defaultMin;
+        let condInfo = { text: '맑음/구름조금', icon: '☀️' };
+        if (data.daily && data.daily.temperature_2m_max) {
+          maxTemp = Math.round(data.daily.temperature_2m_max[0]);
+          minTemp = Math.round(data.daily.temperature_2m_min[0]);
+          if (data.daily.weathercode && data.daily.weathercode.length > 0) {
+            condInfo = getWeatherCondition(data.daily.weathercode[0]);
+          }
+        }
+        renderWidget(widgetDiv, formattedDate, city.name, maxTemp, minTemp, condInfo);
+      } catch (err) {
+        renderWidget(widgetDiv, formattedDate, city.name, defaultMax, defaultMin, { text: '맑음/구름조금', icon: '☀️' });
+      }
+    }
+
+    function renderWidget(container, dateText, cityName, maxT, minT, condInfo) {
+      container.innerHTML = `
+        <div class="forecast-header">
+          <span class="forecast-date">📅 ${dateText} 일기예보</span>
+          <span class="forecast-city">📍 ${cityName}</span>
+        </div>
+        <div class="forecast-details">
+          <div>
+            <span style="font-size:0.8rem; color:#475569;">예상 기온: </span>
+            <span class="forecast-temp">최고 ${maxT}°C / 최저 ${minT}°C</span>
+          </div>
+          <div class="forecast-condition">
+            ${condInfo.icon} <span>${condInfo.text}</span>
+          </div>
+        </div>
+      `;
     }
 
     function getWeatherCondition(code) {
@@ -1847,108 +2053,14 @@
       }
     }
 
-    function switchMainTab(tabId) {
-      const mainBtns = document.getElementsByClassName("main-tab-btn");
-      for (let btn of mainBtns) btn.classList.remove("active");
-      event.currentTarget.classList.add("active");
-
-      const tabContents = document.getElementsByClassName("tab-content");
-      for (let content of tabContents) content.classList.remove("active");
-
-      const subTabMenu = document.getElementById("subTabMenu");
-
-      if (tabId === 'schedule') {
-        subTabMenu.classList.add("active");
-        const firstDayBtn = document.querySelector(".sub-tab-btn");
-        if (firstDayBtn) firstDayBtn.click();
+    function viewFile(dataUrl, fileType, fileName) {
+      let win = window.open();
+      win.document.write(`<title>${fileName}</title>`);
+      if (fileType && fileType.includes('image')) {
+        win.document.write(`<img src="${dataUrl}" style="max-width:100%;">`);
       } else {
-        subTabMenu.classList.remove("active");
-        document.getElementById(tabId).classList.add("active");
-
-        if (tabId === 'summary') renderSummaryTable();
-        if (tabId === 'tickets') {
-          renderTransportTable();
-          renderAttractionTable();
-          renderHotelTable();
-        }
-        if (tabId === 'restaurants') renderRestaurantList();
-        if (tabId === 'checklist') renderChecklist();
-        if (tabId === 'shopping') renderShoppingList();
-        if (tabId === 'diary') renderDiaryList();
+        win.document.write(`<iframe src="${dataUrl}" style="width:100%; height:100vh; border:none;"></iframe>`);
       }
-    }
-
-    function openDayTab(evt, dayId) {
-      currentActiveDayId = dayId;
-      const subBtns = document.getElementsByClassName("sub-tab-btn");
-      for (let btn of subBtns) btn.classList.remove("active");
-      evt.currentTarget.classList.add("active");
-      evt.currentTarget.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-
-      document.getElementById("day-view-container").classList.add("active");
-      renderDaySchedule(dayId);
-    }
-
-    function renderDaySchedule(dayId) {
-      let allSchedules = JSON.parse(localStorage.getItem('travel_custom_schedules') || JSON.stringify(defaultSchedules));
-      let dayData = allSchedules[dayId];
-
-      document.getElementById('schedule-card-title').innerText = dayData.title;
-      loadForecast('active-weather-widget', dayData.cityName, dayData.dateStr, dayData.max, dayData.min, dayData.outfit);
-      
-      const memoView = document.getElementById('memo-view');
-      const memoTextarea = document.getElementById('memo-textarea');
-      const memoText = dayData.memo || '';
-      memoView.innerText = memoText;
-      memoTextarea.value = memoText;
-      
-      memoView.style.display = 'block';
-      memoTextarea.style.display = 'none';
-      document.getElementById('memo-edit-btn').style.display = 'inline-block';
-      document.getElementById('memo-save-btn').style.display = 'none';
-
-      document.getElementById('active-map-box').src = `https://maps.google.com/maps?q=${encodeURIComponent(dayData.mapQuery)}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
-      document.getElementById('map-card-title').innerText = `🗺️ 여행 지도 (${dayData.mapName})`;
-
-      const gothicGuideCard = document.getElementById('gothic-guide-card');
-      const batlloGuideCard = document.getElementById('batllo-guide-card');
-      if (dayId === 'day3') {
-        gothicGuideCard.style.display = 'block';
-        batlloGuideCard.style.display = 'block';
-      } else {
-        gothicGuideCard.style.display = 'none';
-        batlloGuideCard.style.display = 'none';
-      }
-
-      const tbody = document.getElementById('scheduleTableBody');
-      tbody.innerHTML = '';
-
-      dayData.rows.forEach((row, index) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td class="col-time">
-            <span id="time-text-${index}">${row.time}</span>
-            <input type="text" id="time-input-${index}" class="edit-input" value="${row.time}" style="display:none;">
-          </td>
-          <td>
-            <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px; flex-wrap:wrap;">
-              <span id="place-text-${index}" class="place-link" onclick="updateMap('active-map-box', '${row.place}', '${row.place}')">${row.place}</span>
-              <input type="text" id="place-input-${index}" class="edit-input" value="${row.place}" style="display:none; margin-bottom:0;">
-              <a href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(row.place)}" target="_blank" class="dir-btn">🚗 길찾기</a>
-            </div>
-            <span id="desc-text-${index}" style="display:block; font-size:0.85rem; color:#475569;">${row.desc}</span>
-            <textarea id="desc-input-${index}" class="edit-input" style="display:none; resize:vertical;" rows="2">${row.desc}</textarea>
-          </td>
-          <td>
-            <div class="action-btn-group">
-              <button id="edit-btn-${index}" class="btn-edit" onclick="toggleEdit('${dayId}', ${index})">수정</button>
-              <button id="save-btn-${index}" class="btn-save" style="display:none;" onclick="saveEdit('${dayId}', ${index})">저장</button>
-              <button class="del-row-btn" onclick="deleteScheduleRow('${dayId}', ${index})">삭제</button>
-            </div>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
     }
 
     function toggleGothicGuide() {
@@ -1965,249 +2077,35 @@
       icon.innerText = content.classList.contains('open') ? '▲' : '▼';
     }
 
-    function toggleOutfitEdit() {
-      document.getElementById('outfit-view').style.display = 'none';
-      document.getElementById('outfit-textarea').style.display = 'block';
-      document.getElementById('outfit-edit-btn').style.display = 'none';
-      document.getElementById('outfit-save-btn').style.display = 'inline-block';
+    function switchMainTab(tabId) {
+      const mainBtns = document.getElementsByClassName("main-tab-btn");
+      for (let btn of mainBtns) btn.classList.remove("active");
+      event.currentTarget.classList.add("active");
+
+      const tabContents = document.getElementsByClassName("tab-content");
+      for (let content of tabContents) content.classList.remove("active");
+
+      const subTabMenu = document.getElementById("subTabMenu");
+      if (tabId === 'schedule') {
+        subTabMenu.classList.add("active");
+        const firstDayBtn = document.querySelector(".sub-tab-btn");
+        if (firstDayBtn) firstDayBtn.click();
+      } else {
+        subTabMenu.classList.remove("active");
+        document.getElementById(tabId).classList.add("active");
+        renderAll();
+      }
     }
 
-    function saveOutfitEdit() {
-      const outfitVal = document.getElementById('outfit-textarea').value.trim();
-      let allSchedules = JSON.parse(localStorage.getItem('travel_custom_schedules') || JSON.stringify(defaultSchedules));
-      allSchedules[currentActiveDayId].outfit = outfitVal;
-      localStorage.setItem('travel_custom_schedules', JSON.stringify(allSchedules));
-      renderDaySchedule(currentActiveDayId);
-    }
+    function openDayTab(evt, dayId) {
+      currentActiveDayId = dayId;
+      const subBtns = document.getElementsByClassName("sub-tab-btn");
+      for (let btn of subBtns) btn.classList.remove("active");
+      evt.currentTarget.classList.add("active");
+      evt.currentTarget.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
 
-    function toggleMemoEdit() {
-      document.getElementById('memo-view').style.display = 'none';
-      document.getElementById('memo-textarea').style.display = 'block';
-      document.getElementById('memo-edit-btn').style.display = 'none';
-      document.getElementById('memo-save-btn').style.display = 'inline-block';
-    }
-
-    function saveMemoEdit() {
-      const memoVal = document.getElementById('memo-textarea').value.trim();
-      let allSchedules = JSON.parse(localStorage.getItem('travel_custom_schedules') || JSON.stringify(defaultSchedules));
-      allSchedules[currentActiveDayId].memo = memoVal;
-      localStorage.setItem('travel_custom_schedules', JSON.stringify(allSchedules));
-      const memoView = document.getElementById('memo-view');
-      memoView.innerText = memoVal;
-      memoView.style.display = 'block';
-      document.getElementById('memo-textarea').style.display = 'none';
-      document.getElementById('memo-edit-btn').style.display = 'inline-block';
-      document.getElementById('memo-save-btn').style.display = 'none';
-    }
-
-    function toggleEdit(dayId, index) {
-      document.getElementById(`time-text-${index}`).style.display = 'none';
-      document.getElementById(`time-input-${index}`).style.display = 'block';
-      document.getElementById(`place-text-${index}`).style.display = 'none';
-      document.getElementById(`place-input-${index}`).style.display = 'block';
-      document.getElementById(`desc-text-${index}`).style.display = 'none';
-      document.getElementById(`desc-input-${index}`).style.display = 'block';
-      document.getElementById(`edit-btn-${index}`).style.display = 'none';
-      document.getElementById(`save-btn-${index}`).style.display = 'inline-block';
-    }
-
-    function saveEdit(dayId, index) {
-      const newTime = document.getElementById(`time-input-${index}`).value.trim();
-      const newPlace = document.getElementById(`place-input-${index}`).value.trim();
-      const newDesc = document.getElementById(`desc-input-${index}`).value.trim();
-      if (!newPlace) { alert('장소명은 비워둘 수 없습니다!'); return; }
-      let allSchedules = JSON.parse(localStorage.getItem('travel_custom_schedules') || JSON.stringify(defaultSchedules));
-      allSchedules[dayId].rows[index] = { time: newTime || '시간미정', place: newPlace, desc: newDesc };
-      allSchedules[dayId].rows.sort((a, b) => a.time.localeCompare(b.time, 'ko', { numeric: true }));
-      localStorage.setItem('travel_custom_schedules', JSON.stringify(allSchedules));
+      document.getElementById("day-view-container").classList.add("active");
       renderDaySchedule(dayId);
-    }
-
-    function addScheduleRow() {
-      const timeVal = document.getElementById('newSchedTime').value.trim();
-      const placeVal = document.getElementById('newSchedPlace').value.trim();
-      const descVal = document.getElementById('newSchedDesc').value.trim();
-      if (!placeVal) { alert('장소명은 필수로 입력해 주세요!'); return; }
-      let allSchedules = JSON.parse(localStorage.getItem('travel_custom_schedules') || JSON.stringify(defaultSchedules));
-      allSchedules[currentActiveDayId].rows.push({ time: timeVal || '시간미정', place: placeVal, desc: descVal || '' });
-      allSchedules[currentActiveDayId].rows.sort((a, b) => a.time.localeCompare(b.time, 'ko', { numeric: true }));
-      localStorage.setItem('travel_custom_schedules', JSON.stringify(allSchedules));
-      document.getElementById('newSchedTime').value = '';
-      document.getElementById('newSchedPlace').value = '';
-      document.getElementById('newSchedDesc').value = '';
-      renderDaySchedule(currentActiveDayId);
-    }
-
-    function deleteScheduleRow(dayId, index) {
-      if (confirm('이 일정을 삭제하시겠습니까?')) {
-        let allSchedules = JSON.parse(localStorage.getItem('travel_custom_schedules') || JSON.stringify(defaultSchedules));
-        allSchedules[dayId].rows.splice(index, 1);
-        localStorage.setItem('travel_custom_schedules', JSON.stringify(allSchedules));
-        renderDaySchedule(dayId);
-      }
-    }
-
-    async function loadForecast(widgetId, cityName, dateStr, defaultMax, defaultMin, outfitTip) {
-      const widgetDiv = document.getElementById(widgetId);
-      if (!widgetDiv) return;
-      const city = cityCoords[cityName];
-      const dateObj = new Date(dateStr + 'T00:00:00');
-      const formattedDate = `${dateObj.getMonth() + 1}월 ${dateObj.getDate()}일`;
-      try {
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&daily=temperature_2m_max,temperature_2m_min,weathercode&start_date=${dateStr}&end_date=${dateStr}&timezone=auto`;
-        const res = await fetch(url);
-        const data = await res.json();
-        let maxTemp = defaultMax;
-        let minTemp = defaultMin;
-        let condInfo = { text: '맑음/구름조금', icon: '☀️' };
-        if (data.daily && data.daily.temperature_2m_max) {
-          maxTemp = Math.round(data.daily.temperature_2m_max[0]);
-          minTemp = Math.round(data.daily.temperature_2m_min[0]);
-          if (data.daily.weathercode && data.daily.weathercode.length > 0) {
-            condInfo = getWeatherCondition(data.daily.weathercode[0]);
-          }
-        }
-        renderWidget(widgetDiv, formattedDate, city.name, maxTemp, minTemp, condInfo, outfitTip);
-      } catch (err) {
-        renderWidget(widgetDiv, formattedDate, city.name, defaultMax, defaultMin, { text: '맑음/구름조금', icon: '☀️' }, outfitTip);
-      }
-    }
-
-    function renderWidget(container, dateText, cityName, maxT, minT, condInfo, outfit) {
-      container.innerHTML = `
-        <div class="forecast-header">
-          <span class="forecast-date">📅 ${dateText} 일기예보</span>
-          <span class="forecast-city">📍 ${cityName}</span>
-        </div>
-        <div class="forecast-details">
-          <div>
-            <span style="font-size:0.8rem; color:#475569;">예상 기온: </span>
-            <span class="forecast-temp">최고 ${maxT}°C / 최저 ${minT}°C</span>
-          </div>
-          <div class="forecast-condition">
-            ${condInfo.icon} <span>${condInfo.text}</span>
-          </div>
-        </div>
-        <div class="forecast-outfit-container">
-          <div id="outfit-view" class="forecast-outfit">💡 <b>추천 옷차림 & 팁:</b> ${outfit}</div>
-          <textarea id="outfit-textarea" class="outfit-textarea" rows="2">${outfit}</textarea>
-          <div class="action-btn-group" style="justify-content: flex-end;">
-            <button id="outfit-edit-btn" class="btn-edit" onclick="toggleOutfitEdit()">수정</button>
-            <button id="outfit-save-btn" class="btn-save" style="display:none;" onclick="saveOutfitEdit()">저장</button>
-          </div>
-        </div>
-      `;
-    }
-
-    /* 준비물 관리 */
-    function getDefaultChecklist() {
-      return [
-        { id: 1, text: '슬리퍼, 샴푸/린스, 수영복, 버릴 수건', checked: false },
-        { id: 2, text: '니스 짐 맡기기용 서브 가방', checked: false },
-        { id: 3, text: '보냉가방, 음료, 돗자리', checked: false },
-        { id: 4, text: '셀카봉, 삼각대, 블루투스 스피커', checked: false },
-        { id: 5, text: '핫팩, 바람막이, 가벼운 패딩/후리스', checked: false }
-      ];
-    }
-
-    function renderChecklist() {
-      const container = document.getElementById('checklistContainer');
-      let items = JSON.parse(localStorage.getItem('travel_checklist') || JSON.stringify(getDefaultChecklist()));
-      container.innerHTML = '';
-      items.forEach(item => {
-        const div = document.createElement('div');
-        div.className = `checklist-item ${item.checked ? 'checked' : ''}`;
-        div.innerHTML = `
-          <div class="check-left">
-            <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="toggleCheck(${item.id})">
-            <span>${item.text}</span>
-          </div>
-          <button class="del-item-btn" onclick="deleteChecklist(${item.id})">삭제</button>
-        `;
-        container.appendChild(div);
-      });
-    }
-
-    function addChecklistItem() {
-      const input = document.getElementById('newCheckItem');
-      if (!input.value.trim()) return;
-      let items = JSON.parse(localStorage.getItem('travel_checklist') || JSON.stringify(getDefaultChecklist()));
-      items.push({ id: Date.now(), text: input.value.trim(), checked: false });
-      localStorage.setItem('travel_checklist', JSON.stringify(items));
-      input.value = '';
-      renderChecklist();
-    }
-
-    function toggleCheck(id) {
-      let items = JSON.parse(localStorage.getItem('travel_checklist') || JSON.stringify(getDefaultChecklist()));
-      items = items.map(i => i.id === id ? { ...i, checked: !i.checked } : i);
-      localStorage.setItem('travel_checklist', JSON.stringify(items));
-      renderChecklist();
-    }
-
-    function deleteChecklist(id) {
-      let items = JSON.parse(localStorage.getItem('travel_checklist') || JSON.stringify(getDefaultChecklist()));
-      items = items.filter(i => i.id !== id);
-      localStorage.setItem('travel_checklist', JSON.stringify(items));
-      renderChecklist();
-    }
-
-    /* 쇼핑템 관리 */
-    function getDefaultShopping() {
-      return [
-        { id: 1, region: '헬싱키', text: 'Elovena 오트밀: Vadelma(라즈베리), Mustikka(블루베리) 맛 추천' },
-        { id: 2, region: '헬싱키', text: 'Mynthon 민트캔디: 코가 뻥 뚫리는 시원함' },
-        { id: 3, region: '헬싱키', text: 'Suffeli puffi / Dumle: 핀란드 국민 초콜릿' }
-      ];
-    }
-
-    function renderShoppingList() {
-      const container = document.getElementById('shoppingContainer');
-      let items = JSON.parse(localStorage.getItem('travel_shopping') || JSON.stringify(getDefaultShopping()));
-      container.innerHTML = '';
-      const regions = [...new Set(items.map(i => i.region || '기타'))];
-      regions.sort();
-      regions.forEach(regionName => {
-        const regionItems = items.filter(i => (i.region || '기타') === regionName);
-        if (regionItems.length > 0) {
-          const groupDiv = document.createElement('div');
-          groupDiv.className = 'shop-region-group';
-          let html = `<div class="shop-region-title">📍 ${regionName}</div>`;
-          regionItems.forEach(item => {
-            html += `
-              <div class="checklist-item">
-                <div class="check-left">
-                  <span>🛍️ ${item.text}</span>
-                </div>
-                <button class="del-item-btn" onclick="deleteShopping(${item.id})">삭제</button>
-              </div>
-            `;
-          });
-          groupDiv.innerHTML = html;
-          container.appendChild(groupDiv);
-        }
-      });
-    }
-
-    function addShoppingItem() {
-      const regionInput = document.getElementById('newShopRegion');
-      const itemInput = document.getElementById('newShopItem');
-      const regionVal = regionInput.value.trim() || '기타';
-      const itemVal = itemInput.value.trim();
-      if (!itemVal) { alert('추천 쇼핑템 내용을 입력해 주세요!'); return; }
-      let items = JSON.parse(localStorage.getItem('travel_shopping') || JSON.stringify(getDefaultShopping()));
-      items.push({ id: Date.now(), region: regionVal, text: itemVal });
-      localStorage.setItem('travel_shopping', JSON.stringify(items));
-      regionInput.value = '';
-      itemInput.value = '';
-      renderShoppingList();
-    }
-
-    function deleteShopping(id) {
-      let items = JSON.parse(localStorage.getItem('travel_shopping') || JSON.stringify(getDefaultShopping()));
-      items = items.filter(i => i.id !== id);
-      localStorage.setItem('travel_shopping', JSON.stringify(items));
-      renderShoppingList();
     }
   </script>
 </body>
