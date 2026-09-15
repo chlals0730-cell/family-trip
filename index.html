@@ -1745,7 +1745,7 @@
       }
     }
 
-    /* 준비물 관리 */
+    /* 준비물 관리 (새 항목이 맨 위로 추가되도록 수정) */
     function renderChecklist() {
       const container = document.getElementById('checklistContainer');
       container.innerHTML = '';
@@ -1767,7 +1767,8 @@
       const input = document.getElementById('newCheckItem');
       if (!input.value.trim()) return;
       if (!appData.checklist) appData.checklist = [];
-      appData.checklist.push({ id: Date.now(), text: input.value.trim(), checked: false });
+      // unshift를 사용하여 새 데이터가 배열 맨 앞(화면 최상단)에 위치하도록 변경
+      appData.checklist.unshift({ id: Date.now(), text: input.value.trim(), checked: false });
       syncData('checklist');
       input.value = '';
       renderChecklist();
