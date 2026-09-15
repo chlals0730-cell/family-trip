@@ -298,29 +298,13 @@
       transition: all 0.2s;
     }
 
-    /* 파란색 세모(▲) 수정 버튼 */
-    .btn-edit {
-      background: #e0f2fe;
-      color: #0284c7;
-      border: 1px solid #bae6fd;
-    }
+    .btn-edit { background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; }
     .btn-edit:hover { background: #bae6fd; }
 
-    /* 초록색 체크(✓) 저장 버튼 */
-    .btn-save {
-      background: #dcfce7;
-      color: #16a34a;
-      border: 1px solid #bbf7d0;
-      font-size: 0.85rem;
-    }
+    .btn-save { background: #dcfce7; color: #16a34a; border: 1px solid #bbf7d0; font-size: 0.85rem; }
     .btn-save:hover { background: #bbf7d0; }
 
-    /* 빨간색 엑스(✕) 삭제 버튼 */
-    .del-row-btn, .del-item-btn {
-      background: #fee2e2;
-      color: #ef4444;
-      border: 1px solid #fecaca;
-    }
+    .del-row-btn, .del-item-btn { background: #fee2e2; color: #ef4444; border: 1px solid #fecaca; }
     .del-row-btn:hover, .del-item-btn:hover { background: #fecaca; }
 
     /* 파일 업로드 관련 */
@@ -396,7 +380,7 @@
       width: 100%;
     }
 
-    /* 장소 링크 및 길찾기 (콤팩트 아이콘형) */
+    /* 장소 링크 및 길찾기 */
     .place-link {
       color: #0284c7;
       font-weight: bold;
@@ -634,6 +618,7 @@
       align-self: flex-end;
     }
 
+    /* PC 전용 스타일 반응형 */
     @media (min-width: 768px) {
       main {
         max-width: 950px;
@@ -930,7 +915,6 @@
   </main>
 
   <script>
-    // 입력해주신 Firebase 실시간 데이터베이스 설정 적용 완료
     const firebaseConfig = {
       apiKey: "AIzaSyCeUR_6Xo2_s9ahZY1V_wcyVE505i66Tr4",
       authDomain: "family-trip-d0d76.firebaseapp.com",
@@ -944,7 +928,6 @@
     let db = null;
     let isCloudConnected = false;
 
-    // 기본 데이터셋
     const defaultData = {
       summary: [
         { day: 'Day 1', date: '10/1 (목)', city: '인천 → 헬싱키', desc: '21:50 출국 (인천공항T1, 13시간 40분 비행)' },
@@ -1615,7 +1598,7 @@
       }
     }
 
-    /* 맛집 관리 */
+    /* 맛집 관리 (대표메뉴 텍스트 표시 방식 변경) */
     function renderRestaurantList() {
       const container = document.getElementById('restaurantContainer');
       container.innerHTML = '';
@@ -1637,7 +1620,7 @@
                 <div class="check-left" style="flex:1;">
                   <div id="rest-view-${item.id}">
                     <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name)}" target="_blank" class="place-link" style="font-size:0.95rem; font-weight:bold;">${item.name}</a>
-                    <span style="color:#64748b; margin-left:6px; font-size:0.85rem;">(대표메뉴: ${item.menu})</span>
+                    <span style="color:#64748b; margin-left:6px; font-size:0.85rem;">(${item.menu})</span>
                   </div>
                   <div id="rest-edit-form-${item.id}" style="display:none; width:100%;">
                     <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
@@ -1833,7 +1816,7 @@
         div.innerHTML = `
           <div class="diary-item-header">
             <div>
-              <span class="diary-author">✏️ ${item.author}</span>
+              <span class="diary-author">${item.author}</span>
               <span class="diary-date-badge" style="margin-left:8px;">${item.day}</span>
             </div>
             <div class="action-btn-group">
