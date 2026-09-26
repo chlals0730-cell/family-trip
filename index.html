@@ -83,7 +83,7 @@
       background-color: #f8fafc;
     }
 
-    /* 서브 탭 메뉴 (Day 1 ~ Day 13) */
+    /* 서브 탭 메뉴 (Day1 ~ Day13) */
     .sub-tab-container {
       display: none;
       overflow-x: auto;
@@ -678,19 +678,19 @@
 
   <!-- 서브 탭 메뉴 -->
   <nav class="sub-tab-container" id="subTabMenu">
-    <button class="sub-tab-btn active" onclick="openDayTab(event, 'day1')">Day 1 (10/1)</button>
-    <button class="sub-tab-btn" onclick="openDayTab(event, 'day2')">Day 2 (10/2)</button>
-    <button class="sub-tab-btn" onclick="openDayTab(event, 'day3')">Day 3 (10/3)</button>
-    <button class="sub-tab-btn" onclick="openDayTab(event, 'day4')">Day 4 (10/4)</button>
-    <button class="sub-tab-btn" onclick="openDayTab(event, 'day5')">Day 5 (10/5)</button>
-    <button class="sub-tab-btn" onclick="openDayTab(event, 'day6')">Day 6 (10/6)</button>
-    <button class="sub-tab-btn" onclick="openDayTab(event, 'day7')">Day 7 (10/7)</button>
-    <button class="sub-tab-btn" onclick="openDayTab(event, 'day8')">Day 8 (10/8)</button>
-    <button class="sub-tab-btn" onclick="openDayTab(event, 'day9')">Day 9 (10/9)</button>
-    <button class="sub-tab-btn" onclick="openDayTab(event, 'day10')">Day 10 (10/10)</button>
-    <button class="sub-tab-btn" onclick="openDayTab(event, 'day11')">Day 11 (10/11)</button>
-    <button class="sub-tab-btn" onclick="openDayTab(event, 'day12')">Day 12 (10/12)</button>
-    <button class="sub-tab-btn" onclick="openDayTab(event, 'day13')">Day 13 (10/13)</button>
+    <button class="sub-tab-btn active" onclick="openDayTab(event, 'day1')">Day1 (10/1)</button>
+    <button class="sub-tab-btn" onclick="openDayTab(event, 'day2')">Day2 (10/2)</button>
+    <button class="sub-tab-btn" onclick="openDayTab(event, 'day3')">Day3 (10/3)</button>
+    <button class="sub-tab-btn" onclick="openDayTab(event, 'day4')">Day4 (10/4)</button>
+    <button class="sub-tab-btn" onclick="openDayTab(event, 'day5')">Day5 (10/5)</button>
+    <button class="sub-tab-btn" onclick="openDayTab(event, 'day6')">Day6 (10/6)</button>
+    <button class="sub-tab-btn" onclick="openDayTab(event, 'day7')">Day7 (10/7)</button>
+    <button class="sub-tab-btn" onclick="openDayTab(event, 'day8')">Day8 (10/8)</button>
+    <button class="sub-tab-btn" onclick="openDayTab(event, 'day9')">Day9 (10/9)</button>
+    <button class="sub-tab-btn" onclick="openDayTab(event, 'day10')">Day10 (10/10)</button>
+    <button class="sub-tab-btn" onclick="openDayTab(event, 'day11')">Day11 (10/11)</button>
+    <button class="sub-tab-btn" onclick="openDayTab(event, 'day12')">Day12 (10/12)</button>
+    <button class="sub-tab-btn" onclick="openDayTab(event, 'day13')">Day13 (10/13)</button>
   </nav>
 
   <main>
@@ -715,7 +715,7 @@
       </div>
     </div>
 
-    <!-- Day 1 ~ Day 13 컨테이너 -->
+    <!-- Day1 ~ Day13 컨테이너 -->
     <div id="day-view-container" class="tab-content day-content">
       <div id="active-weather-widget" class="forecast-widget">일기예보 불러오는 중...</div>
       
@@ -969,19 +969,19 @@
 
     const defaultData = {
       summary: [
-        { day: 'Day 1', date: '10/1 (목)', city: '인천 → 헬싱키', desc: '21:50 출국 (인천공항T1, 13시간 40분 비행)' },
-        { day: 'Day 2', date: '10/2 (금)', city: '헬싱키 → 바르셀로나', desc: '05:30 헬싱키 레이오버 (알라스풀, 시내구경) → 17:05 바르셀로나 이동' },
-        { day: 'Day 3', date: '10/3 (토)', city: '바르셀로나', desc: '라람블라 & 고딕지구 쇼핑 · 17:15 까사바트요 · Vinitus 저녁' },
-        { day: 'Day 4', date: '10/4 (일)', city: '바르셀로나', desc: '10:00 구엘저택 · 13:30 피카소 미술관 · 16:15 사그라다 파밀리아' },
-        { day: 'Day 5', date: '10/5 (월)', city: '바르셀로나', desc: '09:15 몬세라트 수도원 투어 (소년합창단, 검은성모상)' },
-        { day: 'Day 6', date: '10/6 (화)', city: '바르셀로나 → 니스', desc: '10:30 구엘공원 · 시우타데야 공원 → 20:50 니스 비행기 이동' },
-        { day: 'Day 7', date: '10/7 (수)', city: '니스', desc: '캐슬힐, 살레아 마켓 · 해변 수영 / 마티스-샤갈 미술관' },
-        { day: 'Day 8', date: '10/8 (목)', city: '니스 근교', desc: '09:00 에즈 선인장마일 · 팔로마비치 · 빌프랑슈 쉬르메르' },
-        { day: 'Day 9', date: '10/9 (금)', city: '니스 근교 (렌트)', desc: '10:00 베르동 협곡 전동보트 · 무스티에 생트마리 · 샤토 와이너리' },
-        { day: 'Day 10', date: '10/10 (토)', city: '니스 근교 (렌트)', desc: '[자유] 망통–이탈리아(산레모) or 고흐드-루시용 샘의마을 코스' },
-        { day: 'Day 11', date: '10/11 (일)', city: '니스 → 바르셀로나', desc: '생폴드방스 구경 후 17:25 바르셀로나 이동' },
-        { day: 'Day 12', date: '10/12 (월)', city: '바르셀로나 → 헬싱키', desc: '10:05 바르셀로나 출발 → 헬싱키 2시간 20분 경유 후 한국행' },
-        { day: 'Day 13', date: '10/13 (화)', city: '인천 도착', desc: '11:20 인천공항 T1 도착 및 귀국' }
+        { day: 'Day1', date: '10/1 (목)', city: '인천 → 헬싱키', desc: '21:50 출국 (인천공항T1, 13시간 40분 비행)' },
+        { day: 'Day2', date: '10/2 (금)', city: '헬싱키 → 바르셀로나', desc: '05:30 헬싱키 레이오버 (알라스풀, 시내구경) → 17:05 바르셀로나 이동' },
+        { day: 'Day3', date: '10/3 (토)', city: '바르셀로나', desc: '라람블라 & 고딕지구 쇼핑 · 17:15 까사바트요 · Vinitus 저녁' },
+        { day: 'Day4', date: '10/4 (일)', city: '바르셀로나', desc: '10:00 구엘저택 · 13:30 피카소 미술관 · 16:15 사그라다 파밀리아' },
+        { day: 'Day5', date: '10/5 (월)', city: '바르셀로나', desc: '09:15 몬세라트 수도원 투어 (소년합창단, 검은성모상)' },
+        { day: 'Day6', date: '10/6 (화)', city: '바르셀로나 → 니스', desc: '10:30 구엘공원 · 시우타데야 공원 → 20:50 니스 비행기 이동' },
+        { day: 'Day7', date: '10/7 (수)', city: '니스', desc: '캐슬힐, 살레아 마켓 · 해변 수영 / 마티스-샤갈 미술관' },
+        { day: 'Day8', date: '10/8 (목)', city: '니스 근교', desc: '09:00 에즈 선인장마일 · 팔로마비치 · 빌프랑슈 쉬르메르' },
+        { day: 'Day9', date: '10/9 (금)', city: '니스 근교 (렌트)', desc: '10:00 베르동 협곡 전동보트 · 무스티에 생트마리 · 샤토 와이너리' },
+        { day: 'Day10', date: '10/10 (토)', city: '니스 근교 (렌트)', desc: '[자유] 망통–이탈리아(산레모) or 고흐드-루시용 샘의마을 코스' },
+        { day: 'Day11', date: '10/11 (일)', city: '니스 → 바르셀로나', desc: '생폴드방스 구경 후 17:25 바르셀로나 이동' },
+        { day: 'Day12', date: '10/12 (월)', city: '바르셀로나 → 헬싱키', desc: '10:05 바르셀로나 출발 → 헬싱키 2시간 20분 경유 후 한국행' },
+        { day: 'Day13', date: '10/13 (화)', city: '인천 도착', desc: '11:20 인천공항 T1 도착 및 귀국' }
       ],
       transport: [
         { id: 1, route: '인천 ↔ 스페인/핀란드', agency: '핀에어 (투어비스)', info: '<b>8MJLO7</b> (5,184,000원)', files: [] },
@@ -1020,22 +1020,22 @@
         { id: 5, text: '핫팩, 바람막이, 가벼운 패딩/후리스', checked: false }
       ],
       diaries: [
-        { id: 1, author: '준혁', day: 'Day 1 (10/1)', content: '드디어 가족 여행 출발! 비행기가 길어서 조금 피곤하지만 설렌다.', photos: [], comments: [{ id: 101, author: '엄마', text: '조심히 잘 다녀오자 아들~' }] }
+        { id: 1, author: '준혁', day: 'Day1 (10/1)', content: '드디어 가족 여행 출발! 비행기가 길어서 조금 피곤하지만 설렌다.', photos: [], comments: [{ id: 101, author: '엄마', text: '조심히 잘 다녀오자 아들~' }] }
       ],
       schedules: {
-        'day1': { title: 'Day 1 (10/1 목) - 출국', cityName: 'Helsinki', dateStr: '2026-10-01', max: 9, min: 3, memo: '인천공항 3시간 전 도착 필수.', mapQuery: 'Incheon International Airport Terminal 1', mapName: '인천공항 T1', rows: [{ time: '21:50 - 05:30', place: '인천T1 → 헬싱키', desc: '핀에어 항공편 출국' }] },
-        'day2': { title: 'Day 2 (10/2 금) - 헬싱키 레이오버 & 바르셀로나 이동', cityName: 'Helsinki', dateStr: '2026-10-02', max: 10, min: 4, memo: '알라스풀 수영복, 슬리퍼 지참.', mapQuery: 'Allas Sea Pool, Helsinki', mapName: '알라스풀', rows: [{ time: '05:30', place: '헬싱키 공항', desc: '시내 이동' }, { time: '07:30 - 10:30', place: '알라스풀', desc: '사우나 및 수영' }, { time: '17:05 - 20:05', place: '헬싱키 → 바르셀로나', desc: '비행기 이동' }] },
-        'day3': { title: 'Day 3 (10/3 토) - 바르셀로나 (라람블라 & 고딕지구)', cityName: 'Barcelona', dateStr: '2026-10-03', max: 24, min: 15, memo: '까사바트요 17:15 도착', mapQuery: 'La Rambla, Barcelona', mapName: '라람블라 거리', rows: [{ time: '10:00 - 11:00', place: '라람블라 거리', desc: '거리 구경' }, { time: '12:00 - 14:00', place: '고딕지구', desc: '고딕지구 투어' }, { time: '17:15 - 19:00', place: '까사바트요', desc: '관람' }] },
-        'day4': { title: 'Day 4 (10/4 일) - 바르셀로나 (가우디 & 피카소)', cityName: 'Barcelona', dateStr: '2026-10-04', max: 23, min: 14, memo: '예약증 준비', mapQuery: 'Palau Guell', mapName: '구엘저택', rows: [{ time: '10:00 - 12:00', place: '구엘저택', desc: '관람' }, { time: '13:30 - 15:30', place: '피카소 미술관', desc: '관람' }, { time: '16:15 - 18:00', place: '사그라다 파밀리아', desc: '성당 관람' }] },
-        'day5': { title: 'Day 5 (10/5 월) - 몬세라트 수도원 투어', cityName: 'Montserrat', dateStr: '2026-10-05', max: 22, min: 13, memo: '현금 지참', mapQuery: 'Santa Maria de Montserrat Abbey', mapName: '몬세라트 수도원', rows: [{ time: '09:15', place: '산츠역', desc: '몬세라트행 열차' }] },
-        'day6': { title: 'Day 6 (10/6 화) - 바르셀로나 → 니스 이동', cityName: 'Barcelona', dateStr: '2026-10-06', max: 23, min: 14, memo: '체크아웃', mapQuery: 'Park Guell, Barcelona', mapName: '구엘공원', rows: [{ time: '20:50 - 22:10', place: '니스 공항', desc: '비행기 이동' }] },
-        'day7': { title: 'Day 7 (10/7 수) - 니스 시내 & 구시가지', cityName: 'Nice', dateStr: '2026-10-07', max: 21, min: 13, memo: '해변 돗자리 지참', mapQuery: 'Castle Hill of Nice', mapName: '캐슬힐 전망대', rows: [{ time: '10:00', place: '캐슬힐 전망대', desc: '전망 감상' }] },
-        'day8': { title: 'Day 8 (10/8 목) - 에즈 & 팔로마 비치', cityName: 'Nice', dateStr: '2026-10-08', max: 20, min: 12, memo: '에즈 골목길 가파름', mapQuery: 'Jardin Exotique de Èze', mapName: '에즈 마을', rows: [{ time: '09:00', place: '에즈 마을', desc: '선인장 마을 탐방' }] },
-        'day9': { title: 'Day 9 (10/9 금) - 베르동 협곡 & 무스티에 생트마리', cityName: 'Verdon', dateStr: '2026-10-09', max: 19, min: 11, memo: '차량 내 짐 보관 금지', mapQuery: 'Pont du Galatas, Verdon', mapName: '베르동 협곡', rows: [{ time: '10:00', place: '베르동 협곡', desc: '전동보트 탑승' }] },
-        'day10': { title: 'Day 10 (10/10 토) - 남프랑스 근교 자유 일정', cityName: 'Nice', dateStr: '2026-10-10', max: 20, min: 12, memo: '망통 또는 산레모 코스', mapQuery: 'Menton, France', mapName: '망통', rows: [{ time: '종일', place: '망통 & 산레모', desc: '근교 드라이브' }] },
-        'day11': { title: 'Day 11 (10/11 일) - 생폴드방스 → 바르셀로나', cityName: 'Nice', dateStr: '2026-10-11', max: 21, min: 13, memo: '렌터카 반납', mapQuery: 'Saint-Paul-de-Vence', mapName: '생폴드방스', rows: [{ time: '17:25', place: '니스 공항', desc: '바르셀로나행 비행기' }] },
-        'day12': { title: 'Day 12 (10/12 월) - 바르셀로나 → 헬싱키', cityName: 'Barcelona', dateStr: '2026-10-12', max: 22, min: 14, memo: '경유지 면세점 확인', mapQuery: 'Josep Tarradellas Barcelona-El Prat Airport', mapName: '바르셀로나 공항', rows: [{ time: '10:05', place: '바르셀로나 공항', desc: '한국행 출발' }] },
-        'day13': { title: 'Day 13 (10/13 화) - 인천공항 도착', cityName: 'Helsinki', dateStr: '2026-10-13', max: 15, min: 8, memo: '수하물 확인', mapQuery: 'Incheon International Airport Terminal 1', mapName: '인천공항 T1', rows: [{ time: '11:20', place: 'Incheon International Airport Terminal 1', desc: '도착 및 일정 종료' }] }
+        'day1': { title: 'Day1 (10/1 목) - 출국', cityName: 'Helsinki', dateStr: '2026-10-01', max: 9, min: 3, memo: '인천공항 3시간 전 도착 필수.', mapQuery: 'Incheon International Airport Terminal 1', mapName: '인천공항 T1', rows: [{ time: '21:50 - 05:30', place: '인천T1 → 헬싱키', desc: '핀에어 항공편 출국' }] },
+        'day2': { title: 'Day2 (10/2 금) - 헬싱키 레이오버 & 바르셀로나 이동', cityName: 'Helsinki', dateStr: '2026-10-02', max: 10, min: 4, memo: '알라스풀 수영복, 슬리퍼 지참.', mapQuery: 'Allas Sea Pool, Helsinki', mapName: '알라스풀', rows: [{ time: '05:30', place: '헬싱키 공항', desc: '시내 이동' }, { time: '07:30 - 10:30', place: '알라스풀', desc: '사우나 및 수영' }, { time: '17:05 - 20:05', place: '헬싱키 → 바르셀로나', desc: '비행기 이동' }] },
+        'day3': { title: 'Day3 (10/3 토) - 바르셀로나 (라람블라 & 고딕지구)', cityName: 'Barcelona', dateStr: '2026-10-03', max: 24, min: 15, memo: '까사바트요 17:15 도착', mapQuery: 'La Rambla, Barcelona', mapName: '라람블라 거리', rows: [{ time: '10:00 - 11:00', place: '라람블라 거리', desc: '거리 구경' }, { time: '12:00 - 14:00', place: '고딕지구', desc: '고딕지구 투어' }, { time: '17:15 - 19:00', place: '까사바트요', desc: '관람' }] },
+        'day4': { title: 'Day4 (10/4 일) - 바르셀로나 (가우디 & 피카소)', cityName: 'Barcelona', dateStr: '2026-10-04', max: 23, min: 14, memo: '예약증 준비', mapQuery: 'Palau Guell', mapName: '구엘저택', rows: [{ time: '10:00 - 12:00', place: '구엘저택', desc: '관람' }, { time: '13:30 - 15:30', place: '피카소 미술관', desc: '관람' }, { time: '16:15 - 18:00', place: '사그라다 파밀리아', desc: '성당 관람' }] },
+        'day5': { title: 'Day5 (10/5 월) - 몬세라트 수도원 투어', cityName: 'Montserrat', dateStr: '2026-10-05', max: 22, min: 13, memo: '현금 지참', mapQuery: 'Santa Maria de Montserrat Abbey', mapName: '몬세라트 수도원', rows: [{ time: '09:15', place: '산츠역', desc: '몬세라트행 열차' }] },
+        'day6': { title: 'Day6 (10/6 화) - 바르셀로나 → 니스 이동', cityName: 'Barcelona', dateStr: '2026-10-06', max: 23, min: 14, memo: '체크아웃', mapQuery: 'Park Guell, Barcelona', mapName: '구엘공원', rows: [{ time: '20:50 - 22:10', place: '니스 공항', desc: '비행기 이동' }] },
+        'day7': { title: 'Day7 (10/7 수) - 니스 시내 & 구시가지', cityName: 'Nice', dateStr: '2026-10-07', max: 21, min: 13, memo: '해변 돗자리 지참', mapQuery: 'Castle Hill of Nice', mapName: '캐슬힐 전망대', rows: [{ time: '10:00', place: '캐슬힐 전망대', desc: '전망 감상' }] },
+        'day8': { title: 'Day8 (10/8 목) - 에즈 & 팔로마 비치', cityName: 'Nice', dateStr: '2026-10-08', max: 20, min: 12, memo: '에즈 골목길 가파름', mapQuery: 'Jardin Exotique de Èze', mapName: '에즈 마을', rows: [{ time: '09:00', place: '에즈 마을', desc: '선인장 마을 탐방' }] },
+        'day9': { title: 'Day9 (10/9 금) - 베르동 협곡 & 무스티에 생트마리', cityName: 'Verdon', dateStr: '2026-10-09', max: 19, min: 11, memo: '차량 내 짐 보관 금지', mapQuery: 'Pont du Galatas, Verdon', mapName: '베르동 협곡', rows: [{ time: '10:00', place: '베르동 협곡', desc: '전동보트 탑승' }] },
+        'day10': { title: 'Day10 (10/10 토) - 남프랑스 근교 자유 일정', cityName: 'Nice', dateStr: '2026-10-10', max: 20, min: 12, memo: '망통 또는 산레모 코스', mapQuery: 'Menton, France', mapName: '망통', rows: [{ time: '종일', place: '망통 & 산레모', desc: '근교 드라이브' }] },
+        'day11': { title: 'Day11 (10/11 일) - 생폴드방스 → 바르셀로나', cityName: 'Nice', dateStr: '2026-10-11', max: 21, min: 13, memo: '렌터카 반납', mapQuery: 'Saint-Paul-de-Vence', mapName: '생폴드방스', rows: [{ time: '17:25', place: '니스 공항', desc: '바르셀로나행 비행기' }] },
+        'day12': { title: 'Day12 (10/12 월) - 바르셀로나 → 헬싱키', cityName: 'Barcelona', dateStr: '2026-10-12', max: 22, min: 14, memo: '경유지 면세점 확인', mapQuery: 'Josep Tarradellas Barcelona-El Prat Airport', mapName: '바르셀로나 공항', rows: [{ time: '10:05', place: '바르셀로나 공항', desc: '한국행 출발' }] },
+        'day13': { title: 'Day13 (10/13 화) - 인천공항 도착', cityName: 'Helsinki', dateStr: '2026-10-13', max: 15, min: 8, memo: '수하물 확인', mapQuery: 'Incheon International Airport Terminal 1', mapName: '인천공항 T1', rows: [{ time: '11:20', place: 'Incheon International Airport Terminal 1', desc: '도착 및 일정 종료' }] }
       }
     };
 
