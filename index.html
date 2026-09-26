@@ -150,7 +150,6 @@
       margin-bottom: 16px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.04);
       overflow: hidden;
-      display: none;
     }
     .guide-header {
       padding: 14px 16px;
@@ -170,12 +169,20 @@
       font-size: 0.9rem;
       color: #14532d;
       line-height: 1.7;
-      white-space: pre-line;
       display: none;
       border-top: 1px solid #bbf7d0;
       background: #ffffff;
     }
     .guide-content.open { display: block; }
+    .highlight-box {
+      background: #f0fdf4;
+      border-left: 4px solid #22c55e;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      border-radius: 0 6px 6px 0;
+    }
+    .guide-section { margin-bottom: 16px; }
+    .guide-section h4 { color: #15803d; margin-bottom: 6px; font-size: 1rem; }
 
     /* 일기예보 위젯 스타일 */
     .forecast-widget {
@@ -749,146 +756,51 @@
       </div>
 
      <!-- 1. 고딕지구 핵심 투어 셀프 가이드 -->
-  <div class="card" id="gothic-guide-card">
-    <div class="card-header" onclick="toggleGothicGuide()" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
-      <h3 style="margin: 0; font-size: 1.2rem; color: #0f172a;">🎧 고딕지구 핵심 투어 셀프 가이드</h3>
-      <span id="gothic-toggle-icon" style="font-size: 0.9rem; color: #64748b;">▲</span>
-    </div>
-    
-    <div id="gothic-guide-content" class="guide-content">
-      <div class="highlight-box">
-        <strong>📌 고딕지구 투어 안내:</strong> 대성당 주변 및 고딕지구를 거닐며 함께 읽어보면 좋은 깊이 있는 역사 background 지식입니다.
+      <div class="card guide-card" id="gothic-guide-card">
+        <div class="guide-header" onclick="toggleGuide('gothic-guide-content', 'gothic-toggle-icon')">
+          <h3 style="margin: 0; font-size: 1.1rem;">🎧 고딕지구 핵심 투어 셀프 가이드</h3>
+          <span id="gothic-toggle-icon">▲</span>
+        </div>
+        
+        <div id="gothic-guide-content" class="guide-content">
+          <div class="highlight-box">
+            <strong>📌 고딕지구 투어 안내:</strong> 대성당 주변 및 고딕지구를 거닐며 함께 읽어보면 좋은 깊이 있는 역사 background 지식입니다.
+          </div>
+
+          <div class="guide-section">
+            <h4>① 키스의 벽 (대성당 바로 앞)</h4>
+            <p>COAC(건축가협회) 건물 옆 골목으로 들어가면 갑자기 커다란 키스 장면이 나타나요. 멀리서 보면 그냥 로맨틱한 벽화 같은데, 가까이 다가가면 완전히 다른 그림이 펼쳐집니다 — 알고 보면 수천 개의 개인 사진 타일을 모자이크로 붙여 입맞춤 장면을 만든 작품이거든요.</p>
+          </div>
+          <div class="guide-section">
+            <h4>② Plaça Nova — 로마 수도교 & 피카소 벽화</h4>
+            <p>대성당 정면 광장인데, 여기 두 개의 시간이 겹쳐 있어요. 왼쪽엔 2000년 전 로마 시대 수도교 기둥이 떡하니 서 있고, 오른쪽 건축가협회(COAC) 건물엔 피카소가 디자인한 벽화가 있어요.</p>
+          </div>
+          <div class="guide-section">
+            <h4>③ 왕의 광장 (Plaça del Rei)</h4>
+            <p>여기 서면 스케일이 달라져요. 정면의 큰 계단식 건물이 왕궁(Palau Reial Major)인데, 1493년에 콜럼버스가 아메리카에서 돌아와 가톨릭 공동왕에게 직접 보고를 한 곳이 바로 저 계단 위입니다.</p>
+          </div>
+        </div>
       </div>
 
-      <div class="guide-section">
-        <h4>① 키스의 벽 (대성당 바로 앞)</h4>
-        <p>COAC(건축가협회) 건물 옆 골목으로 들어가면 갑자기 커다란 키스 장면이 나타나요. 멀리서 보면 그냥 로맨틱한 벽화 같은데, 가까이 다가가면 완전히 다른 그림이 펼쳐집니다 — 알고 보면 수천 개의 개인 사진 타일을 모자이크로 붙여 입맞춤 장면을 만든 작품이거든요.
+      <!-- 2. 까사바트요 셀프 가이드 -->
+      <div class="card guide-card" id="batllo-guide-card">
+        <div class="guide-header" onclick="toggleGuide('batllo-guide-content', 'batllo-toggle-icon')">
+          <h3 style="margin: 0; font-size: 1.1rem;">🏠 까사바트요 관람 셀프 가이드</h3>
+          <span id="batllo-toggle-icon">▲</span>
+        </div>
 
-사실 이 벽에는 슬픈 사연이 숨어 있어요. 1714년 스페인 왕위계승전쟁에서 바르셀로나가 함락된 지 300주년을 기념하기 위해 만들어졌는데, 보통 전쟁 기념물은 무겁고 엄숙하잖아요. 근데 작가는 정반대로 갔어요 — 전쟁의 고통 대신 '사랑할 자유', '행복을 누릴 권리'를 표현하고 싶었다고 해요. 그래서 저는 여기서 항상 이렇게 말해요: "카탈루냐 사람들은 패배의 자리에 사랑을 심었다"고요. 사진 찍기 전에 딱 한 걸음만 뒤로 물러나 보세요, 타일이 아니라 '키스'가 보일 거예요.
-
-<strong>[바르셀로나 역사를 조금만 더 설명하자면]</strong>
-• <strong>출발점 — "1714년 바르셀로나 함락":</strong> 옛날 옛적, 카탈루냐는 자기들만의 왕, 자기들만의 법, 자기들만의 정부를 가진 거의 독립국 같은 곳이었어요. 그런데 1701년쯤 스페인 왕실에 후계자 문제가 터지면서 유럽 전체가 전쟁에 휘말려요 (스페인 왕위계승전쟁이라고 불러요). 카탈루냐는 이때 '잘못된 편'을 들었다가 지고 말아요. 결국 1714년, 새 스페인 왕 펠리페 5세 군대가 바르셀로나를 함락시키고, 카탈루냐의 헌법과 자치권을 하루아침에 다 없애버려요. 여러분이 지금 걷고 있는 이 도시가, 300년 전 딱 이맘때 "우리 것"에서 "남의 것"이 된 거예요. 그날이 9월 11일인데, 지금도 카탈루냐 사람들은 이날을 공식 기념일로 지켜요. 슬픈 날이지만요. 그리고 딱 300년 뒤인 2014년, 그 아픈 기억을 그냥 슬픔으로만 두지 말자면서 예술가들이 만든 게 그 키스의 벽이에요. "우리 자유는 뺏겼지만, 그래도 사랑할 자유, 행복할 권리는 못 뺏는다"는 메시지로요.
-
-• <strong>두번째 상처 — "프랑코 독재":</strong> 시간이 흘러 20세기, 스페인에 프랑코라는 독재자가 등장해요(1939~1975년). 이 사람이 진짜 심했던 게 뭐냐면요, 카탈루냐 말(카탈란어) 자체를 학교에서도, 관공서에서도, 길거리 간판에서도 못 쓰게 금지시켰어요. 상상해보세요 — 여러분이 부모님한테 배운 말을 학교 가서 쓰면 혼나는 상황이요. 근데 이게 역효과가 났어요. 막으면 막을수록 사람들은 그 말과 문화를 더 소중하게, 더 반항적으로 지키게 됐거든요. 지금 카탈루냐 사람들이 그렇게까지 자기 언어에 자부심 갖는 이유, 여기서 나온 거예요.
-
-• <strong>최근의 독립운동 — "2010년대~현재":</strong> 자, 그럼 지금은 어떨까요? 2017년에 카탈루냐 정부가 "우리 독립할지 말지 투표하자"며 국민투표를 열었어요. 근데 스페인 중앙정부 입장에선 이게 불법이었고, 결국 이 투표를 주도한 사람들이 재판에 넘겨졌고, 당시 카탈루냐 주지사였던 사람은 아예 벨기에로 도망가서 몇 년째 못 돌아오고 있었어요. 그런데 놀랍게도 최근 상황이 좀 바뀌었어요 — 2026년 7월, 유럽연합 최고 법원이 "이 사람들 사면해줘도 괜찮다"고 판결을 내리면서 다시 이 이슈가 뉴스에 자주 나오고 있어요. 그러니까 이건 "옛날 이야기"가 아니라 지금 이 순간에도 계속 진행 중인 이야기예요.
-
-• <strong>그래서 다들 독립을 원하냐고요? 그건 아니에요:</strong> 여기서 오해하기 쉬운 게, 카탈루냐 사람들이 다 독립을 원한다고 생각하시는 건데요, 실제 여론조사 보면 찬성과 반대가 거의 반반으로 갈려 있어요. 독립 원하는 쪽은 "우리는 언어도 다르고, 역사도 다르고, 낸 세금만큼 돌려받지도 못한다"고 하고요, 반대하는 쪽은 "2017년 투표 자체가 헌법 위반이었고, 독립하면 EU 회원국 자격도 잃을 수 있어서 경제적으로 손해"라고 봐요. 어느 쪽이 맞고 틀린 문제가 아니라, 지금도 계속 논쟁 중인 이슈라는 게 핵심이에요.</p>
-      </div>
-
-      <div class="guide-section">
-        <h4>② Plaça Nova — 로마 수도교 & 피카소 벽화</h4>
-        <p>대성당 정면 광장인데, 여기 두 개의 시간이 겹쳐 있어요. 왼쪽엔 2000년 전 로마 시대 수도교 기둥이 떡하니 서 있고, 오른쪽 건축가협회(COAC) 건물엔 피카소가 디자인한 벽화가 있어요. 재밌는 건, 피카소는 여기 직접 붓을 든 게 아니라 스케치만 넘겼고, 실제로 벽에 새긴 건 노르웨이 조각가 칼 네스야르(Carl Nesjar)라는 사람이에요. 모래를 고압으로 뿌려서 콘크리트 표면을 긁어내는 '샌드블라스팅' 기법으로요. 피카소가 정작 완성된 벽화를 직접 본 적이 없다는 게 함정이죠 — 그때 이미 프랑코 독재 때문에 스페인에 발도 못 들이는 상황이었거든요. 그림 속엔 카탈루냐 전통 축제(사람 탑, 거인 인형 행렬)가 담겨 있어요.</p>
-      </div>
-
-      <div class="guide-section">
-        <h4>③ 왕의 광장 (Plaça del Rei)</h4>
-        <p>여기 서면 스케일이 달라져요. 정면의 큰 계단식 건물이 <strong>왕궁(Palau Reial Major)</strong>인데, 1493년에 콜럼버스가 아메리카에서 돌아와 가톨릭 공동왕(이사벨 여왕·페르난도 왕)에게 직접 보고를 한 곳이 바로 저 계단 위 살로 델 틴엘(Saló del Tinell)이에요. 상상해보세요 — 신대륙에서 데려온 원주민, 앵무새, 금붙이까지 저 계단 앞에 쭉 늘어놓았다는 기록이 있어요. 유럽 역사가 통째로 방향을 튼 순간이 이 조용한 광장에서 일어난 거죠.</p>
-      </div>
-
-      <div class="guide-section">
-        <h4>④ 자우마 광장 (Plaça de Sant Jaume)</h4>
-        <p>한쪽엔 카탈루냐 자치정부 청사(지역정부), 반대쪽엔 바르셀로나 시청(시정부)이 마주 보고 있어요. 재밌는 건 이 자리가 원래 로마 시대 포룸, 즉 도시의 중심 광장이었다는 거예요. 2000년 넘게 이 도시의 '정치 1번지' 역할을 계속하고 있는 셈이죠. 카탈루냐 독립 시위 때 뉴스에 자주 나오는 광장 이예요.</p>
-      </div>
-
-      <div class="guide-section">
-        <h4>⑤ 비스베 다리 (Pont del Bisbe)</h4>
-        <p>여기가 다들 사진 제일 많이 찍는 곳인데, 반전이 있어요. 딱 봐도 중세 느낌 물씬 나죠? 근데 사실 1928년에 지어진, 100년도 안 된 다리예요. 가우디의 제자였던 건축가 후안 루비오 이 베예르가 만들었어요. 원래 이 사람은 고딕지구의 '가짜 건물'들을 싹 다 허물고 순수 고딕 양식으로 재건하자는 대형 프로젝트를 시의회에 제안했는데, 보수적인 시의회가 이걸 거절하고 심지어 풍자 잡지에서 조롱까지 당했다고 해요. 화가 난 그가 유일하게 지을 수 있었던 이 작은 다리 밑에 뭘 새겼을까요? 칼에 꽂힌 해골이에요. 자기를 무시한 사람들에게 보내는 저주라는 설이 유력해요. 전설에 따르면 해골을 정면으로 보면 불운이 온다고 하니, 다리 아래서는 뒤돌아서 걸으며 소원 비는 걸 추천드려요 — 손해 볼 거 없잖아요?</p>
-      </div>
-
-      <div class="guide-section">
-        <h4>⑥ 바르셀로나 대성당 (La Seu)</h4>
-        <p>정식 명칭은 산타 에울랄리아 대성당. 안뜰(회랑)에 들어가면 거위 13마리가 뒤뚱거리고 있는 걸 보실 수 있는데, 이게 그냥 장식이 아니에요. 이 성당의 주인공인 에울랄리아 성녀가 순교했을 때 나이가 13살이었다는 걸 상징해요. 에울랄리아는 3세기 말 바르셀로나(당시 로마 도시 '바르시노')에서 태어난 걸로 전해지는데, 하필 로마 황제 디오클레티아누스가 기독교인을 대대적으로 탄압하던 '대박해' 시기였어요. 이때 로마는 기독교인들에게 로마 신들에게 제사를 지내라고 강요했고, 거부하면 처형했어요.
-
-에울랄리아는 겨우 13살에, 지역 총독 다키아누스(Decià)를 직접 찾아가 기독교인 탄압을 멈춰달라고 요구했어요. 어린 소녀가 로마 총독 앞에 제 발로 걸어가서 항의했다는 거죠. 총독은 당연히 격노했고, 신앙을 버리라고 강요했지만 그녀가 거부하자 '13가지 고문'을 명령했다고 전해져요.
-
-전설에 따르면 유리 조각이나 칼이 박힌 통 안에 그녀를 가두고 언덕길로 굴렸고(그 길이 지금도 '산타 에울랄리아 내리막길'이라는 이름으로 남아있어요), 가슴을 잘라내고, 끓는 기름에 담그고, 결국 X자 모양 십자가에 못 박혀 처형된 뒤 참수됐다고 해요. 숨이 끊어지는 순간 목(또는 입)에서 흰 비둘기가 날아올랐다는 이야기도 함께 전해집니다.
-
-재밌는 건, 이 이야기가 스페인 메리다(Mérida)라는 다른 도시의 순교 성녀 '에울랄리아'의 전설과 거의 똑같다는 거예요. 그래서 학자들 사이에선 "혹시 원래 한 사람의 이야기가 두 도시로 갈라져 각자의 수호성인이 된 게 아니냐"는 논쟁이 지금도 있어요.</p>
-      </div>
-
-      <div class="guide-section">
-        <h4>⑦ 산펠립네리 광장 (Plaça de Sant Felip Neri)</h4>
-        <p>겉으로는 분수 있고 아이들이 뛰노는 평화로운 광장인데, 성당 벽을 자세히 보시면 마맛자국처럼 움푹움푹 파인 흔적들이 보여요. 1938년 1월 30일, 프랑코 측 폭격기가 떨어뜨린 폭탄이 인근 및 스페인 각지에서 온 아이들의 방공호로 쓰이던 이 성당 앞에서 터지며 성당을 무너뜨렸고, 지하실에 피신해 있었던 아이들이 그 잔해에 깔렸어요. 총 42명이 숨졌는데 대부분이 어린이였다고 해요. 오랫동안 "스페인 내전 초기에 생긴 총살형 총알 자국"이라는 소문이 돌았는데, 이것은 전후 프랑코 정권이 자기들의 폭격 책임을 감추기 위해 퍼뜨린 선전이었다는 게 나중에 밝혀졌어요. 재미있는 사연도 하나 곁들이면, 가우디가 생전에 이 근처 성당을 매일 들를 만큼 독실했는데, 트램에 치여 사망한 그날도 이 광장 쪽으로 향하던 길이었다는 이야기가 있어요.</p>
-      </div>
-
-      <div class="guide-section">
-        <h4>⑧ El Call (유대인 지구)</h4>
-        <p>'Call'은 히브리어로 '작은 골목'을 뜻해요. 중세 바르셀로나에서 가장 번성했던 유대인 공동체가 이 좁은 골목들 안에 있었는데, 1391년 스페인 전역에서 벌어진 반유대 폭동 때 이곳도 큰 피해를 입고 이후 공동체가 사실상 해체됐어요. 골목이 유난히 좁고 구불구불한 이유도, 중세 유대인 지구가 원래 방어와 프라이버시를 위해 이런 구조로 설계됐기 때문이에요. 지금은 옛 시나고그(유대교 회당)터가 작은 박물관처럼 남아있어서, 관심 있으시면 잠깐 들어가 보셔도 좋아요.</p>
-      </div>
-
-      <div class="guide-section">
-        <h4>⑨ 카탈루냐 음악당 (Palau de la Música Catalana)</h4>
-        <p>건축가 유이스 도메네크 이 몬타네르가 지은, 유네스코 세계문화유산 콘서트홀이에요. 여긴 무조건 안까지 살짝이라도 들여다보세요. 천장 전체가 스테인드글라스로 된 거대한 '태양' 모양 채광창인데, 낮에 들어오는 햇빛이 색유리를 통과하면서 홀 전체가 황금빛으로 물들어요. 모더니즘(카탈루냐 아르누보) 건축의 정점이라고 불리는 이유를 딱 보면 이해되실 거예요.</p>
-      </div>
-
-      <div class="guide-section">
-        <h4>⑩ 산타카테리나 시장 (Mercat de Santa Caterina)</h4>
-        <p>투어 마무리로 딱 좋은 곳이에요. 알록달록한 물결 모양 지붕이 멀리서도 눈에 확 띄는데, 이 자리는 원래 중세 수도원이 있던 터였어요. 시장을 재건축하면서 땅을 파다가 옛 수도원 유적이 발견됐고, 그래서 건축가들이 아예 바닥 일부를 유리로 만들어 시장 안에서 유적을 내려다볼 수 있게 해놨어요. 내일(4일) 점심 식사 장소입니다.</p>
+        <div id="batllo-guide-content" class="guide-content">
+          <div class="guide-section">
+            <h4>1. 까사 바트요 앞에서 — 먼저 건물의 정체부터</h4>
+            <p>스페인어로 Casa는 ‘집’, Batlló는 이 건물을 의뢰했던 바트요 가문의 이름입니다. 원래 1877년에 지어진 기존 건물을 가우디가 완전히 리모델링하여 탄생시켰습니다.</p>
+          </div>
+          <div class="guide-section">
+            <h4>2. 까사바트요 관람 포인트</h4>
+            <p>해골과 뼈를 연상시키는 발코니와 기둥, 용의 비늘을 표현한 지붕, 그리고 내부 빛의 흐름을 조절한 중앙 광정(Lightwell)을 유심히 살펴보세요.</p>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-
-  <!-- 2. 까사바트요 셀프 가이드 -->
-  <div class="card" id="batllo-guide-card">
-    <div class="card-header" onclick="toggleBatlloGuide()" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
-      <h3 style="margin: 0; font-size: 1.2rem; color: #0f172a;">🏠 까사바트요 관람 셀프 가이드</h3>
-      <span id="batllo-toggle-icon" style="font-size: 0.9rem; color: #64748b;">▲</span>
-    </div>
-
-    <div id="batllo-guide-content" class="guide-content">
-      <div class="guide-section">
-        <h4>1. 까사 바트요 앞에서 — 먼저 건물의 정체부터</h4>
-        <p>스페인어로 Casa는 ‘집’, Batlló는 이 건물을 의뢰했던 바트요 가문의 이름입니다. 그러니까 직역하면 ‘바트요 씨의 집’ 정도가 됩니다.
-그런데 재미있는 건, 이 건물이 처음부터 가우디가 지은 건물이 아니라는 겁니다. 현재 건물의 원래 건물은 1877년 가우디가 건축을 공부할 당시 교수 가운데 한 명이였던 에밀리 살라 코르테스(Emili Sala Cortés)가 지었습니다.
-그 건물을 1903년에 바트요라는 섬유산업가가 구입했고, 1904년부터 1906년 까지 가우디에게 대대적인 개조를 맡겼습니다.
-그러니까 우리가 지금 보는 까사 바트요는 정확하게 말하면 ‘가우디가 처음부터 새로 지은 집’이 아니라, 기존 건물을 가우디가 완전히 변신시킨 작품입니다. 부유한 사업가였던 바트요씨는 당대 최고의 건축가인 가우디에게 건축에 있어서 상당한 자유를 주어 지금의 까사바트요를 탄생할 수 있게 했습니다.</p>
-      </div>
-
-      <div class="guide-section">
-        <h4>2. 그런데 왜 하필 이곳에 이런 집을 지었을까요?</h4>
-        <p>19세기 후반 바르셀로나가 급격하게 성장하면서 이곳은 도시의 중요한 대로가 되었고, 당시 부유한 시민들이 경쟁적으로 자신들의 집을 지었습니다. 당시의 상류층에게 집은 단순히 ‘사는 곳’이 아니라 “내가 어떤 사람인지 도시 사람들에게 보여주는 것”이기도 했습니다.
-그래서 이 거리를 걷다 보면 바로 옆에 있는 건물도 굉장히 화려하고, 조금 더 가면 또 다른 유명한 건물이 등장합니다. 이 주변에는 가우디의 까사 바트요뿐만 아니라, 푸치 이 카다팔크의 까사 아마트예르, 도메네크 이 몬타네르의 까사 레오 모레라 등이 당시 건축가들이 경쟁하듯 독특하게 만든 여러 집들이 모여 있습니다.</p>
-      </div>
-
-      <div class="guide-section">
-        <h4>3. 까사바트요의 외관</h4>
-        <p>먼저 1층에 있는 기둥 보이시죠? 이 기둥을 자세히 보면 일반적인 건물 기둥처럼 반듯하지 않아요. 살짝 휘어져 있고, 표면도 굉장히 부드럽게 이어져 있습니다. 그래서 이 기둥을 보고 사람들이 뼈를 떠올렸어요. 실제로 까사 바트요에는 여러 가지 별명이 있는데, 대표적으로 <strong>‘뼈의 집’</strong>이라고도 불립니다.
-“가우디가 사람의 뼈를 표현했다!” 이렇게 단정해서 말씀드리기는 어렵습니다. 가우디가 이 부분을 직접 그렇게 설명한 기록이 확실하게 남아 있는 것은 아니거든요. 다만 실제로 봤을 때 뼈나 동물의 골격 같은 느낌을 주기 때문에 그런 해석이 굉장히 유명해진 겁니다. 여러분 눈에도 정말 뼈처럼 보이나요?
-
-이번에는 고개를 조금만 올려 가운데 있는 2층, 발코니를 보겠습니다. 이게 까사 바트요에서 정말 유명한 부분입니다. 사람에 따라서는 가면처럼 보인다고 하고, 또 어떤 사람들은 해골처럼 보인다고 합니다. 그래서 ‘가면의 집’이라는 별명도 있습니다. 이곳 또한 가우디가 자신의 건축물을 하나하나 설명해 놓은 것이 아니기 때문에, 정확하게 무엇이다! 라고 정의할 수는 없지만 “사람들로 하여금 해골이나 가면을 연상하는 발코니구나.”라고 이해하시면 됩니다.
-
-진짜 재미있는 건 외벽입니다. 색깔이 한 가지가 아니죠? 파란색도 있고, 초록색도 있고, 갈색도 있고, 금색처럼 반짝이는 부분도 있습니다. 이렇게 작은 조각들을 붙여서 장식하는 방식을 <strong>트렌카디스(trencadís)</strong>라고 합니다. 쉽게 생각하면 깨진 타일이나 세라믹 조각들을 이용해서 만드는 모자이크 같은 방식이에요.
-그런데 이게 멀리서 볼 때하고 가까이서 볼 때 느낌이 완전히 달라요. 멀리서 보면 하나의 커다란 물결처럼 보이는데, 가까이 다가가면 작은 조각들이 하나하나 보입니다. 그래서 혹시 시간 되시면 나중에 사진 찍을 때도 멀리서 한 장, 가까이서 한 장 꼭 찍어보세요. 느낌이 굉장히 달라요.
-
-마지막으로 고개를 제일 위로 올려 가장 유명한 지붕을 봐주세요.
-“지붕이 무엇처럼 보이나요?” 어떤 분들은 물고기 같다고 하고, 공룡같다고, 용 같다고 하십니다.
-까사 바트요의 지붕을 보면 울퉁불퉁한 비늘처럼 이어진 모습이 보이는데요. 이것을 성 조르디가 물리친 용의 등으로 해석하는 이야기가 가장 유명합니다. 전설에 따르면 성 조르디가 마을 사람들을 괴롭히던 용과 싸워 용을 물리쳤고, 용의 피가 떨어진 자리에서 붉은 장미가 피어났다고 합니다. 이 전설과 연결해서 보면 까사 바트요의 지붕은 용의 비늘, 지붕 위에 솟아 있는 십자가 형태의 장식은 성 조르디가 용을 물리치는 모습을 연상시킨다고 볼 수 있습니다. 그래서 까사 바트요를 흔히 ‘용의 집’이라고 설명하기도 합니다.</p>
-      </div>
-
-      <div class="guide-section">
-        <h4>4. 까사 바트요 실내에서 꼭 볼 포인트</h4>
-        <p>보통 집을 지을 때는 먼저 방, 문, 창문, 계단 같은 기능을 만들고, 그다음에 벽지나 장식품으로 예쁘게 꾸미잖아요. 그런데 가우디는 접근 방식이 조금 달랐습니다. 까사 바트요에서는 벽·천장·창문·문손잡이·난간·타일·가구적인 요소까지 서로 따로 디자인하지 않고 하나의 공간으로 연결했습니다. 예를 들어 문을 하나 보더라도 그냥 평범한 직사각형 문을 만들어놓고 장식을 붙인 게 아니라, 문 자체의 모양과 손잡이, 주변 벽의 곡선까지 하나의 디자인으로 이어지게 만들었습니다. 그래서 집 안에 들어와서 생활하는 것 자체가 하나의 건축적 경험이 되게끔 했습니다.
-
-가우디의 특징은 자연의 형태 + 기능 + 빛 + 사람의 움직임을 하나로 연결했다는 것입니다. 그래서 실내를 보실 때는 “예쁘다.” → “왜 이렇게 만들었을까?” 이렇게 한 단계 더 생각해보시면 좋습니다. 벽이 왜 휘어져 있는지, 창문은 왜 이런 모양인지, 타일 색깔은 왜 위아래가 다른지, 손잡이는 왜 이렇게 생겼는지를 살펴보면, 가우디가 단순히 독특한 모양의 집을 만든 것이 아니라 사람이 실제로 생활하는 공간 자체를 하나의 예술 작품으로 만들려고 했다는 것을 느낄 수 있습니다.</p>
-
-        <ul>
-          <li><strong>현관과 계단:</strong> 들어가자마자 보이는 곡선형 계단과 손잡이를 보세요. 가우디는 손으로 잡았을 때 편안하게 잡히도록 손잡이의 형태를 만들고, 사람이 계단을 오르내릴 때 자연스럽게 움직일 수 있도록 난간의 형태를 인체에 맞게 디자인했습니다.</li>
-          <li><strong>메인 플로어(Noble Floor):</strong> 바트요 가족이 실제로 생활했던 가장 중요한 공간입니다. 여기서는 벽, 천장, 창문이 모두 곡선으로 연결되는 모습을 눈여겨보시면 좋습니다. 특히 창문을 통해 들어오는 빛과 창가의 형태를 보세요. 가우디는 아름다움뿐 아니라 실제 생활의 편안함까지 고려했습니다.</li>
-          <li><strong>중앙 광정(Lightwell):</strong> 실내에서 가장 중요한 관람 포인트 중 하나입니다. 위에서 들어온 자연광이 건물 안쪽까지 잘 전달될 수 있도록 중앙에 이렇게 큰 광정을 만들었어요. 그리고 위쪽에서 아래쪽으로 내려갈수록 타일의 색깔과 창문의 형태가 달라지는 것을 볼 수 있습니다. 단순히 예쁘게 장식한 게 아니라, 건물 깊숙한 곳까지 자연광을 끌어들이기 위한 가우디의 공간 설계를 보여주는 부분입니다. 그리고 창문을 열 수 있기 때문에 자연 환기에도 도움이 됩니다. 가우디는 기능적인 문제를 해결하면서 동시에 그것을 건물의 디자인 안에 자연스럽게 포함시켰습니다.</li>
-          <li><strong>문손잡이·창문·난간:</strong> 까사 바트요에서는 이런 작은 부분을 그냥 지나치지 않는 게 좋습니다. 가우디는 건물 전체를 하나의 작품처럼 생각했기 때문에 손잡이 하나까지도 공간의 형태와 사람의 움직임을 고려해서 디자인했습니다.</li>
-          <li><strong>다락의 아치:</strong> 흰색의 반복되는 아치가 이어지는 공간입니다. 약 60개의 연속된 아치가 만들어내는 모습이 동물의 갈비뼈나 골격을 연상시킵니다. 원래는 세탁실이나 창고 등 건물의 서비스 공간이었는데, 가우디가 기능적인 공간마저 독특한 건축 공간으로 만들어냈다는 점을 보시면 좋습니다.</li>
-          <li><strong>옥상:</strong> 마지막에는 밖에서 봤던 독특한 지붕을 가까이에서 볼 수 있습니다. 지붕의 세라믹 타일, 용의 등처럼 보이는 곡선, 그리고 독특한 굴뚝과 환기탑을 살펴보세요. 가우디는 굴뚝처럼 기능적인 시설도 건물의 디자인 일부로 만들었습니다.</li>
-        </ul>
-      </div>
-
-      <div class="highlight-box" style="text-align: center; font-weight: bold; margin-top: 20px;">
-        오늘 설명 참고하셔서 즐거운 관람 하시길 바랍니다! 🇪🇸✨
-      </div>
-    </div>
-  </div>
-
-</div>
 
     <!-- 티켓 및 예약보관함 탭 -->
     <div id="tickets" class="tab-content">
@@ -1164,7 +1076,7 @@
         });
       } catch (err) {
         console.error(err);
-        statusBar.innerText = "🔴 연동 에러 발생";
+        statusBar.innerText = "🔴 연동 에러 발생 (로컬 모드로 작동)";
       }
     }
 
@@ -1184,6 +1096,92 @@
       renderShoppingList();
       renderChecklist();
       renderDiaryList();
+    }
+
+    /* 탭 메뉴 전환 기능 */
+    function switchMainTab(tabId) {
+      document.querySelectorAll('.main-tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+      const clickedBtn = Array.from(document.querySelectorAll('.main-tab-btn')).find(btn => btn.getAttribute('onclick').includes(tabId));
+      if (clickedBtn) clickedBtn.classList.add('active');
+
+      const subTabMenu = document.getElementById('subTabMenu');
+      if (tabId === 'schedule') {
+        subTabMenu.classList.add('active');
+        document.getElementById('day-view-container').classList.add('active');
+        renderDaySchedule(currentActiveDayId);
+      } else {
+        subTabMenu.classList.remove('active');
+        const targetContent = document.getElementById(tabId);
+        if (targetContent) targetContent.classList.add('active');
+      }
+    }
+
+    function openDayTab(evt, dayId) {
+      currentActiveDayId = dayId;
+      document.querySelectorAll('.sub-tab-btn').forEach(btn => btn.classList.remove('active'));
+      if (evt && evt.currentTarget) evt.currentTarget.classList.add('active');
+      renderDaySchedule(dayId);
+    }
+
+    /* 실시간 날씨 데이터 가공 (Open-Meteo) */
+    function loadForecast(widgetId, cityName, dateStr, fallbackMax, fallbackMin) {
+      const widget = document.getElementById(widgetId);
+      const coord = cityCoords[cityName] || cityCoords['Barcelona'];
+      
+      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${coord.lat}&longitude=${coord.lon}&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=auto`)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.daily) {
+            const idx = data.daily.time.indexOf(dateStr);
+            const max = idx !== -1 ? Math.round(data.daily.temperature_2m_max[idx]) : fallbackMax;
+            const min = idx !== -1 ? Math.round(data.daily.temperature_2m_min[idx]) : fallbackMin;
+            widget.innerHTML = `
+              <div class="forecast-header">
+                <span class="forecast-date">📅 ${dateStr} 일기예보</span>
+                <span class="forecast-city">📍 ${coord.name}</span>
+              </div>
+              <div class="forecast-details">
+                <span class="forecast-temp">🌡️ 최저 ${min}°C / 최고 ${max}°C</span>
+                <span class="forecast-condition">☀️ 쾌적함</span>
+              </div>
+            `;
+          } else {
+            throw new Error('No weather data');
+          }
+        })
+        .catch(() => {
+          widget.innerHTML = `
+            <div class="forecast-header">
+              <span class="forecast-date">📅 ${dateStr} 예상 날씨</span>
+              <span class="forecast-city">📍 ${coord.name}</span>
+            </div>
+            <div class="forecast-details">
+              <span class="forecast-temp">🌡️ 최저 ${fallbackMin}°C / 최고 ${fallbackMax}°C</span>
+              <span class="forecast-condition">🌤️ 예보 데이터 수신 중</span>
+            </div>
+          `;
+        });
+    }
+
+    /* 지도 업데이트 */
+    function updateMap(elementId, query, name) {
+      document.getElementById(elementId).src = `https://maps.google.com/maps?q=${encodeURIComponent(query)}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
+      document.getElementById('map-card-title').innerText = `🗺️ 여행 지도 (${name})`;
+    }
+
+    /* 가이드 아코디언 토글 */
+    function toggleGuide(contentId, iconId) {
+      const content = document.getElementById(contentId);
+      const icon = document.getElementById(iconId);
+      if (content.classList.contains('open')) {
+        content.classList.remove('open');
+        icon.innerText = '▲';
+      } else {
+        content.classList.add('open');
+        icon.innerText = '▼';
+      }
     }
 
     /* 전체 요약 관리 */
@@ -1358,7 +1356,7 @@
       }
     }
 
-    /* 항공권 & 렌터카 (클립 아이콘 버튼 적용) */
+    /* 항공권 & 렌터카 */
     function renderTransportTable() {
       const tbody = document.getElementById('transportTableBody');
       tbody.innerHTML = '';
@@ -1377,7 +1375,7 @@
               <div class="file-badge">
                 <span>📄 ${fileObj.name}</span>
                 <div class="file-badge-actions">
-                  <a onclick="viewFile('${fileObj.data}', '${fileObj.type}', '${fileObj.name}')">[보기]</a>
+                  <a onclick="viewFile('${fileObj.data}')">[보기]</a>
                   <a onclick="deleteTransportFile(${index}, ${fIdx})" style="color:#ef4444;">[삭제]</a>
                 </div>
               </div>
@@ -1492,7 +1490,7 @@
       }
     }
 
-    /* 관광지 예약 관리 (클립 아이콘 버튼 적용) */
+    /* 관광지 예약 관리 */
     function renderAttractionTable() {
       const tbody = document.getElementById('attractionTableBody');
       tbody.innerHTML = '';
@@ -1511,7 +1509,7 @@
               <div class="file-badge">
                 <span>📄 ${fileObj.name}</span>
                 <div class="file-badge-actions">
-                  <a onclick="viewFile('${fileObj.data}', '${fileObj.type}', '${fileObj.name}')">[보기]</a>
+                  <a onclick="viewFile('${fileObj.data}')">[보기]</a>
                   <a onclick="deleteAttractionFile(${index}, ${fIdx})" style="color:#ef4444;">[삭제]</a>
                 </div>
               </div>
@@ -1626,7 +1624,17 @@
       }
     }
 
-    /* 숙소 관리 (예약링크 '🔗' 아이콘만 표시) */
+    /* 첨부 파일 보기 */
+    function viewFile(fileData) {
+      const win = window.open();
+      if (win) {
+        win.document.write(`<iframe src="${fileData}" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>`);
+      } else {
+        alert('팝업 차단을 해제해 주세요.');
+      }
+    }
+
+    /* 숙소 관리 */
     function renderHotelTable() {
       const tbody = document.getElementById('hotelTableBody');
       tbody.innerHTML = '';
@@ -1863,7 +1871,7 @@
       }
     }
 
-    /* 준비물 관리 (새 항목이 맨 위로 오도록 unshift 적용) */
+    /* 준비물 관리 */
     function renderChecklist() {
       const container = document.getElementById('checklistContainer');
       container.innerHTML = '';
@@ -1875,7 +1883,7 @@
             <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="toggleCheck(${item.id})">
             <span>${item.text}</span>
           </div>
-          <button class="del-item-btn" title="삭제" onclick="deleteChecklist(${item.id})">✕</button>
+          <button class="del-item-btn" title="삭제" onclick="deleteChecklistItem(${item.id})">✕</button>
         `;
         container.appendChild(div);
       });
@@ -1883,100 +1891,88 @@
 
     function addChecklistItem() {
       const input = document.getElementById('newCheckItem');
-      if (!input.value.trim()) return;
+      const val = input.value.trim();
+      if (!val) { alert('준비물 이름을 입력하세요!'); return; }
       if (!appData.checklist) appData.checklist = [];
-      appData.checklist.unshift({ id: Date.now(), text: input.value.trim(), checked: false });
+      appData.checklist.unshift({ id: Date.now(), text: val, checked: false });
       syncData('checklist');
       input.value = '';
       renderChecklist();
     }
 
     function toggleCheck(id) {
-      appData.checklist = appData.checklist.map(i => i.id === id ? { ...i, checked: !i.checked } : i);
+      appData.checklist = appData.checklist.map(item => item.id === id ? { ...item, checked: !item.checked } : item);
       syncData('checklist');
       renderChecklist();
     }
 
-    function deleteChecklist(id) {
-      appData.checklist = appData.checklist.filter(i => i.id !== id);
-      syncData('checklist');
-      renderChecklist();
+    function deleteChecklistItem(id) {
+      if (confirm('이 항목을 삭제하시겠습니까?')) {
+        appData.checklist = appData.checklist.filter(item => item.id !== id);
+        syncData('checklist');
+        renderChecklist();
+      }
     }
 
-    /* 여행일기 및 댓글 관리 */
+    /* 여행 일기 & 댓글 관리 */
     function renderDiaryList() {
       const container = document.getElementById('diaryFeedContainer');
       container.innerHTML = '';
-      let diaries = (appData.diaries || []).slice();
-      if (diaries.length === 0) {
-        container.innerHTML = `<div style="text-align:center; color:#94a3b8; padding:20px;">작성된 여행일기가 없습니다. 첫 일기를 남겨보세요!</div>`;
+      const list = appData.diaries || [];
+      if (list.length === 0) {
+        container.innerHTML = `<div style="text-align:center; color:#94a3b8; padding:30px;">아직 등록된 일기가 없습니다. 첫 일기를 남겨보세요!</div>`;
         return;
       }
-      diaries.sort((a, b) => b.id - a.id);
 
-      diaries.forEach((item) => {
+      list.forEach((diary) => {
+        const card = document.createElement('div');
+        card.className = 'diary-item-card';
+
         let photosHtml = '';
-        if (item.photos && item.photos.length > 0) {
+        if (diary.photos && diary.photos.length > 0) {
           photosHtml += '<div class="diary-photos-grid">';
-          item.photos.forEach(photoUrl => {
-            photosHtml += `<img src="${photoUrl}" class="diary-photo-thumb" onclick="viewFile('${photoUrl}', 'image/png', '일기 사진')">`;
+          diary.photos.forEach(imgData => {
+            photosHtml += `<img src="${imgData}" class="diary-photo-thumb" onclick="viewFile('${imgData}')">`;
           });
           photosHtml += '</div>';
         }
 
         let commentsHtml = '';
-        const comments = item.comments || [];
-        comments.forEach(c => {
-          commentsHtml += `
-            <div class="comment-item">
-              <div>
-                <span class="comment-author">${c.author}:</span>
-                <span class="comment-text">${c.text}</span>
+        if (diary.comments && diary.comments.length > 0) {
+          diary.comments.forEach(c => {
+            commentsHtml += `
+              <div class="comment-item">
+                <div>
+                  <span class="comment-author">${c.author}:</span>
+                  <span class="comment-text">${c.text}</span>
+                </div>
+                <button class="del-item-btn" style="width:20px; height:20px; font-size:0.65rem;" onclick="deleteComment(${diary.id}, ${c.id})">✕</button>
               </div>
-              <button class="del-item-btn" style="width:20px; height:20px; font-size:0.7rem;" title="댓글 삭제" onclick="deleteComment(${item.id}, ${c.id})">✕</button>
-            </div>
-          `;
-        });
+            `;
+          });
+        }
 
-        const div = document.createElement('div');
-        div.className = 'diary-item-card';
-        div.innerHTML = `
+        card.innerHTML = `
           <div class="diary-item-header">
-            <div>
-              <span class="diary-author">${item.author}</span>
-              <span class="diary-date-badge" style="margin-left:8px;">${item.day}</span>
-            </div>
-            <div class="action-btn-group">
-              <button class="btn-edit" title="수정" onclick="toggleDiaryEdit(${item.id})">▲</button>
-              <button class="del-item-btn" title="삭제" onclick="deleteDiary(${item.id})">✕</button>
+            <span class="diary-author">👤 ${diary.author}</span>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="diary-date-badge">${diary.day}</span>
+              <button class="del-item-btn" title="일기 삭제" onclick="deleteDiary(${diary.id})">✕</button>
             </div>
           </div>
-          <div id="diary-view-${item.id}">
-            <div class="diary-body-text">${item.content}</div>
-            ${photosHtml}
-          </div>
-          <div id="diary-edit-form-${item.id}" style="display:none; margin-top:10px;">
-            <input type="text" id="diary-author-input-${item.id}" class="edit-input" value="${item.author}" placeholder="작성자">
-            <input type="text" id="diary-day-input-${item.id}" class="edit-input" value="${item.day}" placeholder="Day 정보">
-            <textarea id="diary-content-input-${item.id}" class="edit-input" rows="3" style="resize:vertical;">${item.content}</textarea>
-            <div style="text-align:right; margin-top:6px;">
-              <button class="btn-save" title="저장" onclick="saveDiaryEdit(${item.id})">✓</button>
-            </div>
-          </div>
-
+          <div class="diary-body-text">${diary.content}</div>
+          ${photosHtml}
           <div class="comments-section">
-            <div class="comments-title">💬 댓글 (${comments.length})</div>
-            <div id="comments-list-${item.id}">
-              ${commentsHtml.length > 0 ? commentsHtml : '<div style="color:#94a3b8; font-size:0.8rem; margin-bottom:6px;">아직 댓글이 없습니다. 첫 댓글을 남겨보세요!</div>'}
-            </div>
+            <div class="comments-title">💬 댓글 목록 (${(diary.comments || []).length})</div>
+            ${commentsHtml}
             <div class="comment-form">
-              <input type="text" id="comment-author-${item.id}" class="comment-input-name" placeholder="이름 (예: 엄마)">
-              <input type="text" id="comment-text-${item.id}" class="comment-input-text" placeholder="댓글 내용을 입력하세요..." onkeypress="handleCommentEnter(event, ${item.id})">
-              <button class="comment-submit-btn" onclick="addComment(${item.id})">댓글 등록</button>
+              <input type="text" id="c-author-${diary.id}" class="comment-input-name" placeholder="이름">
+              <input type="text" id="c-text-${diary.id}" class="comment-input-text" placeholder="댓글 내용 입력...">
+              <button class="comment-submit-btn" onclick="addComment(${diary.id})">등록</button>
             </div>
           </div>
         `;
-        container.appendChild(div);
+        container.appendChild(card);
       });
     }
 
@@ -1984,33 +1980,43 @@
       const author = document.getElementById('diaryAuthor').value.trim();
       const day = document.getElementById('diaryDaySelect').value;
       const content = document.getElementById('diaryContent').value.trim();
-      const photoInput = document.getElementById('diaryPhotoInput');
+      const files = document.getElementById('diaryPhotoInput').files;
 
-      if (!author || !content) { alert('작성자 이름과 일기 내용을 모두 입력해 주세요!'); return; }
+      if (!author || !content) {
+        alert('작성자 이름과 소감을 입력하세요!');
+        return;
+      }
 
-      const files = photoInput.files;
+      const photos = [];
+      let loaded = 0;
+
       if (files.length > 0) {
-        let processed = 0;
-        let photos = [];
         Array.from(files).forEach(file => {
           const reader = new FileReader();
-          reader.onload = function(e) {
+          reader.onload = (e) => {
             photos.push(e.target.result);
-            processed++;
-            if (processed === files.length) {
-              saveDiaryToData(author, day, content, photos);
+            loaded++;
+            if (loaded === files.length) {
+              saveDiary(author, day, content, photos);
             }
           };
           reader.readAsDataURL(file);
         });
       } else {
-        saveDiaryToData(author, day, content, []);
+        saveDiary(author, day, content, photos);
       }
     }
 
-    function saveDiaryToData(author, day, content, photos) {
+    function saveDiary(author, day, content, photos) {
       if (!appData.diaries) appData.diaries = [];
-      appData.diaries.push({ id: Date.now(), author, day, content, photos, comments: [] });
+      appData.diaries.unshift({
+        id: Date.now(),
+        author,
+        day,
+        content,
+        photos,
+        comments: []
+      });
       syncData('diaries');
       document.getElementById('diaryAuthor').value = '';
       document.getElementById('diaryContent').value = '';
@@ -2018,181 +2024,41 @@
       renderDiaryList();
     }
 
-    function toggleDiaryEdit(id) {
-      document.getElementById(`diary-view-${id}`).style.display = 'none';
-      document.getElementById(`diary-edit-form-${id}`).style.display = 'block';
-    }
-
-    function saveDiaryEdit(id) {
-      const newAuthor = document.getElementById(`diary-author-input-${id}`).value.trim();
-      const newDay = document.getElementById(`diary-day-input-${id}`).value.trim();
-      const newContent = document.getElementById(`diary-content-input-${id}`).value.trim();
-      if (!newAuthor || !newContent) { alert('작성자와 내용은 비워둘 수 없습니다!'); return; }
-      appData.diaries = appData.diaries.map(item => item.id === id ? { ...item, author: newAuthor, day: newDay, content: newContent } : item);
-      syncData('diaries');
-      renderDiaryList();
-    }
-
     function deleteDiary(id) {
-      if (confirm('이 여행일기를 삭제하시겠습니까?')) {
-        appData.diaries = appData.diaries.filter(item => item.id !== id);
+      if (confirm('이 일기를 삭제하시겠습니까?')) {
+        appData.diaries = appData.diaries.filter(d => d.id !== id);
         syncData('diaries');
         renderDiaryList();
       }
     }
 
     function addComment(diaryId) {
-      const author = document.getElementById(`comment-author-${diaryId}`).value.trim();
-      const text = document.getElementById(`comment-text-${diaryId}`).value.trim();
-      if (!author || !text) { alert('이름과 댓글 내용을 모두 입력해주세요!'); return; }
-      appData.diaries = appData.diaries.map(item => {
-        if (item.id === diaryId) {
-          if (!item.comments) item.comments = [];
-          item.comments.push({ id: Date.now(), author, text });
-        }
-        return item;
-      });
-      syncData('diaries');
-      renderDiaryList();
-    }
+      const authorInput = document.getElementById(`c-author-${diaryId}`);
+      const textInput = document.getElementById(`c-text-${diaryId}`);
+      const author = authorInput.value.trim();
+      const text = textInput.value.trim();
 
-    function handleCommentEnter(event, diaryId) {
-      if (event.key === 'Enter') addComment(diaryId);
-    }
+      if (!author || !text) {
+        alert('이름과 댓글 내용을 모두 입력하세요.');
+        return;
+      }
 
-    function deleteComment(diaryId, commentId) {
-      if (confirm('이 댓글을 삭제하시겠습니까?')) {
-        appData.diaries = appData.diaries.map(item => {
-          if (item.id === diaryId && item.comments) {
-            item.comments = item.comments.filter(c => c.id !== commentId);
-          }
-          return item;
-        });
+      const diary = appData.diaries.find(d => d.id === diaryId);
+      if (diary) {
+        if (!diary.comments) diary.comments = [];
+        diary.comments.push({ id: Date.now(), author, text });
         syncData('diaries');
         renderDiaryList();
       }
     }
 
-    /* 날씨, 지도, 탭 전환 */
-    async function loadForecast(widgetId, cityName, dateStr, defaultMax, defaultMin) {
-      const widgetDiv = document.getElementById(widgetId);
-      if (!widgetDiv) return;
-      const city = cityCoords[cityName];
-      const dateObj = new Date(dateStr + 'T00:00:00');
-      const formattedDate = `${dateObj.getMonth() + 1}월 ${dateObj.getDate()}일`;
-      try {
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&daily=temperature_2m_max,temperature_2m_min,weathercode&start_date=${dateStr}&end_date=${dateStr}&timezone=auto`;
-        const res = await fetch(url);
-        const data = await res.json();
-        let maxTemp = defaultMax;
-        let minTemp = defaultMin;
-        let condInfo = { text: '맑음/구름조금', icon: '☀️' };
-        if (data.daily && data.daily.temperature_2m_max) {
-          maxTemp = Math.round(data.daily.temperature_2m_max[0]);
-          minTemp = Math.round(data.daily.temperature_2m_min[0]);
-          if (data.daily.weathercode && data.daily.weathercode.length > 0) {
-            condInfo = getWeatherCondition(data.daily.weathercode[0]);
-          }
-        }
-        renderWidget(widgetDiv, formattedDate, city.name, maxTemp, minTemp, condInfo);
-      } catch (err) {
-        renderWidget(widgetDiv, formattedDate, city.name, defaultMax, defaultMin, { text: '맑음/구름조금', icon: '☀️' });
+    function deleteComment(diaryId, commentId) {
+      const diary = appData.diaries.find(d => d.id === diaryId);
+      if (diary && diary.comments) {
+        diary.comments = diary.comments.filter(c => c.id !== commentId);
+        syncData('diaries');
+        renderDiaryList();
       }
-    }
-
-    function renderWidget(container, dateText, cityName, maxT, minT, condInfo) {
-      container.innerHTML = `
-        <div class="forecast-header">
-          <span class="forecast-date">📅 ${dateText} 일기예보</span>
-          <span class="forecast-city">📍 ${cityName}</span>
-        </div>
-        <div class="forecast-details">
-          <div>
-            <span style="font-size:0.8rem; color:#475569;">예상 기온: </span>
-            <span class="forecast-temp">최고 ${maxT}°C / 최저 ${minT}°C</span>
-          </div>
-          <div class="forecast-condition">
-            ${condInfo.icon} <span>${condInfo.text}</span>
-          </div>
-        </div>
-      `;
-    }
-
-    function getWeatherCondition(code) {
-      if (code === 0) return { text: '맑음', icon: '☀️' };
-      if (code >= 1 && code <= 3) return { text: '구름조금/흐림', icon: '⛅' };
-      if (code === 45 || code === 48) return { text: '안개', icon: '🌫️' };
-      if (code >= 51 && code <= 55) return { text: '이슬비', icon: '🌦️' };
-      if (code >= 61 && code <= 65) return { text: '비', icon: '🌧️' };
-      if (code >= 71 && code <= 77) return { text: '눈', icon: '❄️' };
-      if (code >= 80 && code <= 82) return { text: '소나기', icon: '🌧️' };
-      if (code >= 95 && code <= 99) return { text: '뇌우', icon: '🌩️' };
-      return { text: '구름양호', icon: '🌤️' };
-    }
-
-    function updateMap(iframeId, placeQuery, placeDisplayName) {
-      const mapIframe = document.getElementById(iframeId);
-      const titleElem = document.getElementById('map-card-title');
-      if (mapIframe) {
-        mapIframe.src = `https://maps.google.com/maps?q=${encodeURIComponent(placeQuery)}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
-        if (titleElem) titleElem.innerText = `🗺️ 여행 지도 (${placeDisplayName})`;
-        mapIframe.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    }
-
-    function viewFile(dataUrl, fileType, fileName) {
-      let win = window.open();
-      win.document.write(`<title>${fileName}</title>`);
-      if (fileType && fileType.includes('image')) {
-        win.document.write(`<img src="${dataUrl}" style="max-width:100%;">`);
-      } else {
-        win.document.write(`<iframe src="${dataUrl}" style="width:100%; height:100vh; border:none;"></iframe>`);
-      }
-    }
-
-    function toggleGothicGuide() {
-      const content = document.getElementById('gothic-guide-content');
-      const icon = document.getElementById('guide-toggle-icon');
-      content.classList.toggle('open');
-      icon.innerText = content.classList.contains('open') ? '▲' : '▼';
-    }
-
-    function toggleBatlloGuide() {
-      const content = document.getElementById('batllo-guide-content');
-      const icon = document.getElementById('batllo-toggle-icon');
-      content.classList.toggle('open');
-      icon.innerText = content.classList.contains('open') ? '▲' : '▼';
-    }
-
-    function switchMainTab(tabId) {
-      const mainBtns = document.getElementsByClassName("main-tab-btn");
-      for (let btn of mainBtns) btn.classList.remove("active");
-      event.currentTarget.classList.add("active");
-
-      const tabContents = document.getElementsByClassName("tab-content");
-      for (let content of tabContents) content.classList.remove("active");
-
-      const subTabMenu = document.getElementById("subTabMenu");
-      if (tabId === 'schedule') {
-        subTabMenu.classList.add("active");
-        const firstDayBtn = document.querySelector(".sub-tab-btn");
-        if (firstDayBtn) firstDayBtn.click();
-      } else {
-        subTabMenu.classList.remove("active");
-        document.getElementById(tabId).classList.add("active");
-        renderAll();
-      }
-    }
-
-    function openDayTab(evt, dayId) {
-      currentActiveDayId = dayId;
-      const subBtns = document.getElementsByClassName("sub-tab-btn");
-      for (let btn of subBtns) btn.classList.remove("active");
-      evt.currentTarget.classList.add("active");
-      evt.currentTarget.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-
-      document.getElementById("day-view-container").classList.add("active");
-      renderDaySchedule(dayId);
     }
   </script>
 </body>
